@@ -500,7 +500,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <div class="grid">
 <div>
 <label for="regime">Regime tributário do prestador</label>
-<select id="regime" required aria-describedby="regime-help regime-erro"><option value="">Selecione o regime</option><option>MEI</option><option>Simples Nacional</option><option>Lucro Presumido</option><option>Lucro Real</option><option>Outro regime</option></select><small class="field-hint" id="regime-help">Use o regime em que a empresa está enquadrada na competência da nota.</small>
+<select id="regime" required aria-describedby="regime-help regime-erro"><option value="">Selecione o regime</option><option>MEI</option><option selected>Simples Nacional</option><option>Lucro Presumido</option><option>Lucro Real</option><option>Outro regime</option></select><small class="field-hint" id="regime-help">Use o regime em que a empresa está enquadrada na competência da nota.</small>
 <small class="error" id="regime-erro"></small>
 </div>
 <div>
@@ -510,7 +510,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </div>
 <div>
 <label for="prestador">Município do prestador (UF)</label>
-<input id="prestador" required placeholder="Ex.: Altamira/PA" aria-describedby="prestador-help prestador-erro"><small class="field-hint" id="prestador-help">Informe o município e a UF do estabelecimento do prestador, como Altamira/PA.</small><small class="error" id="prestador-erro"></small>
+<input id="prestador" required value="Altamira/PA" placeholder="Ex.: Altamira/PA" aria-describedby="prestador-help prestador-erro"><small class="field-hint" id="prestador-help">Informe o município e a UF do estabelecimento do prestador, como Altamira/PA.</small><small class="error" id="prestador-erro"></small>
 </div>
 <div>
 <label for="local">Município onde o serviço foi realizado (UF)</label>
