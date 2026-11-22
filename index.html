@@ -332,6 +332,16 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
   #checklist-nfse td[data-label="O que informar"], #invoice-memory td[data-label="Regra e fonte"] { grid-column:1/-1 }
   #checklist-nfse td:empty { display:none }
 }
+.consulta-modos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin:.7rem 0 }
+.consulta-modos button,#resultado-simples .actions button { min-height:44px; padding:.55rem .65rem; background:var(--superficie-alt); color:var(--texto-1); border-color:var(--borda-input); font-size:.9rem }
+.consulta-modos button[aria-pressed=true],#resultado-simples #continuar-avancada { color:#241804; background:var(--ouro-h); border-color:var(--ouro); }
+#resultado-simples-dados { margin:.65rem 0 }
+#resultado-simples-copiar { display:flex; gap:.5rem; flex-wrap:wrap }
+.ajuda-modos li { margin:.45rem 0 }
+@media screen and (max-width:420px) {
+  #resultado-simples-copiar { width:100% }
+  #resultado-simples-copiar button { flex:1 1 auto }
+}
 </style>
 </head>
 <body>
@@ -366,9 +376,13 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <section class="card form-card" aria-labelledby="form-title">
 <div class="panel-heading">
 <h2 id="form-title">Dados do serviço</h2>
-<p>Escolha a atividade e depois o serviço realizado.</p>
+<div class="consulta-modos" role="group" aria-label="Modo de consulta">
+<button type="button" id="modo-simples" aria-pressed="true">Consulta simples</button>
+<button type="button" id="modo-avancado" aria-pressed="false">Consulta avançada</button>
 </div>
-<form id="consulta" novalidate>
+<p id="modo-orientacao" aria-live="polite">Escolha o CNAE e o serviço para consultar o código nacional e a NBS.</p>
+</div>
+<form id="consulta" data-mode="quick" novalidate>
 <div id="avisos" class="alert" role="alert"></div>
 <div class="service-fields">
 <div>
@@ -381,12 +395,13 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <select id="enquadramento" required disabled aria-describedby="enquadramento-ajuda enquadramento-erro"><option value="">Escolha primeiro o CNAE</option></select>
 <small id="enquadramento-ajuda">Escolha a opção que descreve o objeto do contrato.</small><small class="error" id="enquadramento-erro"></small>
 </div>
-<div>
+<div id="descricao-avancada" hidden>
 <label for="servico">Descrição para a nota</label>
 <textarea id="servico" rows="3" required aria-describedby="servico-ajuda servico-erro" placeholder="Ex.: substituição de mola hidráulica em porta de vidro"></textarea>
 <small id="servico-ajuda">Descreva o que foi feito. Um CNAE pode abranger serviços diferentes.</small><small class="error" id="servico-erro"></small>
 </div>
 </div>
+<div id="consulta-avancada-campos" hidden>
 <h3 class="context-title">Dados para avaliar as retenções</h3>
 <div class="grid">
 <div>
@@ -431,11 +446,12 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </div>
 </div>
 </div>
-<div class="actions"><button type="submit">Consultar preenchimento</button><button type="reset">Limpar campos</button></div>
+</div>
+<div class="actions"><button id="consulta-submit" type="submit">Consultar serviço</button><button type="reset">Limpar campos</button></div>
 </form>
 </section>
 <aside class="panel-aside" aria-label="Informações da consulta">
-<section class="card" id="empresa-perfil">
+<section class="card" id="empresa-perfil" hidden>
 <h2>Minha empresa</h2>
 <p>Salve o regime e o município/UF do prestador preenchidos na consulta para reaproveitar nas próximas notas.</p>
 <label for="empresa-nome">Nome da empresa</label>
@@ -447,7 +463,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <section class="card">
 <h2>Preenchimento</h2>
 <p id="progress-label">Nenhum campo preenchido</p>
-<progress id="progress" value="0" max="8" aria-label="Campos obrigatórios válidos"></progress>
+<progress id="progress" value="0" max="2" aria-label="Campos obrigatórios válidos"></progress>
 </section>
 <section class="card">
 <h2>Matriz fiscal</h2>
@@ -456,6 +472,17 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </section>
 </aside>
 </div>
+<section id="resultado-simples" class="card" hidden aria-labelledby="resultado-simples-titulo">
+<h2 id="resultado-simples-titulo" tabindex="-1">Resultado da consulta simples</h2>
+<dl id="resultado-simples-dados"></dl>
+<p id="resultado-simples-aviso" class="field-hint"></p>
+<div class="actions">
+<div id="resultado-simples-copiar"></div>
+<button type="button" id="continuar-avancada">Continuar na consulta avançada</button>
+</div>
+<p id="resultado-simples-status" role="status" class="field-hint"></p>
+<textarea id="resultado-simples-texto" readonly hidden rows="2" aria-label="Texto para copiar"></textarea>
+</section>
 <section id="resultado" class="card" hidden aria-labelledby="resultado-titulo">
 <h2 id="resultado-titulo" tabindex="-1">Como preencher a NFS-e</h2>
 <section id="checklist-nfse" aria-labelledby="checklist-title">
@@ -586,6 +613,10 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <section class="card" id="ajuda" aria-labelledby="ajuda-title">
 <h2 id="ajuda-title">Ajuda para preencher a NFS-e</h2>
 <p>Use o MF Nota Certa para preparar e conferir os dados antes de emitir no portal autorizado.</p>
+<ul class="ajuda-modos">
+<li><strong>Consulta simples.</strong> Selecione o CNAE e o serviço realizado e toque em <b>Consultar serviço</b>. Copie o código de tributação nacional e a NBS, se disponíveis. Para ver tributos e preparar o PDF, toque em <b>Continuar na consulta avançada</b>.</li>
+<li><strong>Consulta avançada.</strong> Abra esse modo para preencher os dados da operação, conferir retenções, usar o checklist e gerar a prévia. Siga o passo a passo abaixo.</li>
+</ul>
 <ol class="ajuda-passos">
 <li><strong>Selecione a atividade e o serviço.</strong> Escolha o CNAE cadastrado da empresa e, em seguida, a opção que corresponde ao que foi feito. Na descrição da nota, explique o serviço com suas próprias palavras, conforme o contrato.</li>
 <li><strong>Informe os dados da operação.</strong> Selecione o regime do prestador, o tipo de tomador e a forma de contratação. Preencha o município/UF do estabelecimento e o local da execução. Digite o valor bruto, antes das retenções.</li>
@@ -597,6 +628,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <details><summary>Quero reaproveitar dados em próximas consultas</summary><p>Em <b>Minha empresa</b>, salve o regime e o município/UF do prestador. Em <b>Cadastro de ISS</b>, cadastre as alíquotas municipais por serviço. Para levar esse cadastro a outro computador, exporte o arquivo JSON e importe no novo navegador.</p></details>
 <div class="actions ajuda-acoes">
 <a class="button-download" href="tutorial-mf-nota-certa.pdf" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
+<small>O tutorial em PDF acompanha a consulta avançada.</small>
 <a href="#consulta-nfse">Voltar à consulta</a>
 <a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
 </div>
@@ -1379,9 +1411,10 @@ for (const [code, name] of activities) {
       populateServices();
       service.value = String(index);
       result.hidden = true;
+      $('resultado-simples').hidden = true;
       updateQuestions();
       if (submitted) validate();
-      $('servico').focus();
+      (isQuickConsultation() ? $('consulta-submit') : $('servico')).focus();
     });
     row.append(label, button);
     section.append(row);
@@ -1389,9 +1422,86 @@ for (const [code, name] of activities) {
   $('tabela').append(section);
 }
 
+function isQuickConsultation() {
+  return form.dataset.mode === 'quick';
+}
+function consultationFields() {
+  return isQuickConsultation() ? fields.filter(field => field === activity || field === service) : fields;
+}
+
+function renderQuickConsultation() {
+  const entry = selected();
+  const list = $('resultado-simples-dados');
+  const notice = $('resultado-simples-aviso');
+  const codes = $('resultado-simples-copiar');
+  list.replaceChildren();
+  codes.replaceChildren();
+  $('resultado-simples-status').textContent = '';
+  $('resultado-simples-texto').hidden = true;
+  addField(list,'Atividade (CNAE)',activity.selectedOptions[0].text);
+  addField(list,'Serviço realizado',entry.name);
+  const classified = /^\d{6}$/.test(entry.code);
+  const outside = entry.code === '—';
+  if (classified) {
+    addField(list,'Código de tributação nacional',formatCode(entry.code) + ' (' + entry.code + ')');
+    addField(list,'NBS',entry.nbs ? entry.nbs + ' · ' + entry.nbsName : 'Confirme a NBS para o serviço.');
+    notice.textContent = 'Códigos de referência para o serviço selecionado. Na consulta avançada, você pode conferir tributos, retenções e condições do contrato.';
+  } else if (outside) {
+    addField(list,'Código de tributação nacional','Não se aplica à NFS-e neste cenário.');
+    if (entry.nbs) addField(list,'NBS de referência',entry.nbs + ' · ' + entry.nbsName);
+    notice.textContent = 'O cenário selecionado está fora da emissão de NFS-e de serviços.';
+  } else {
+    notice.textContent = 'Confirme o serviço efetivamente prestado para identificar o código nacional e a NBS.';
+  }
+  if (entry.note) addField(list,'Condição de uso',entry.note);
+  if (classified) {
+    const copyFields = [['Código nacional',entry.code],['NBS',entry.nbs]];
+    for (const [label,value] of copyFields) {
+      if (!value) continue;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = 'Copiar ' + label;
+      button.addEventListener('click',() => copyInvoiceField(value,label,$('resultado-simples-status'),$('resultado-simples-texto')));
+      codes.append(button);
+    }
+  }
+  $('resultado-simples').hidden = false;
+  $('resultado-simples-titulo').focus();
+}
+
+function switchConsultationMode(mode, focusService = false) {
+  if (form.dataset.mode === mode) return;
+  form.dataset.mode = mode;
+  const quick = isQuickConsultation();
+  $('consulta-avancada-campos').hidden = quick;
+  $('descricao-avancada').hidden = quick;
+  $('empresa-perfil').hidden = quick;
+  $('modo-simples').setAttribute('aria-pressed',String(quick));
+  $('modo-avancado').setAttribute('aria-pressed',String(!quick));
+  $('modo-orientacao').textContent = quick ?
+    'Escolha o CNAE e o serviço para consultar o código nacional e a NBS.' :
+    'Complete os dados do serviço para conferir tributos, retenções, checklist e prévia em PDF.';
+  $('consulta-submit').textContent = quick ? 'Consultar serviço' : 'Consultar preenchimento';
+  $('resultado-simples').hidden = true;
+  result.hidden = true;
+  alerts.replaceChildren();
+  submitted = false;
+  for (const field of fields) {
+    field.removeAttribute('aria-invalid');
+    $(field.id + '-erro').textContent = '';
+  }
+  updateQuestions();
+  updateAnnex();
+  updateProgress();
+  if (focusService) {
+    if (!activity.value || !service.value) (activity.value ? service : activity).focus();
+    else $('servico').focus();
+  }
+}
+
 function validate() {
   const missing = [];
-  for (const field of fields) {
+  for (const field of consultationFields()) {
     if (field.disabled) continue;
     const value = field.value.trim();
     const invalidCity = field instanceof HTMLInputElement && value && !cityPattern.test(value);
@@ -1428,10 +1538,15 @@ function validate() {
 form.addEventListener('submit', event => {
   event.preventDefault();
   submitted = true;
+  $('resultado-simples').hidden = true;
   const missing = validate();
   if (missing.length) {
     result.hidden = true;
     missing[0].focus();
+    return;
+  }
+  if (isQuickConsultation()) {
+    renderQuickConsultation();
     return;
   }
   updateAnnex();
@@ -1449,12 +1564,14 @@ form.addEventListener('submit', event => {
 });
 form.addEventListener('input', () => {
   result.hidden = true;
+  $('resultado-simples').hidden = true;
   updateQuestions();
   if (submitted) validate();
 });
 form.addEventListener('reset', () => {
   submitted = false;
   result.hidden = true;
+  $('resultado-simples').hidden = true;
   alerts.replaceChildren();
   for (const field of fields) {
     field.removeAttribute('aria-invalid');
@@ -1497,10 +1614,10 @@ document.querySelector('#tabela').addEventListener('click', event => {
   }
 });
 updateNavigation();
-const progressFields = [...document.querySelectorAll('#consulta [required]')];
 const progressBar = document.querySelector('#progress');
 const progressLabel = document.querySelector('#progress-label');
 function updateProgress() {
+  const progressFields = consultationFields();
   const complete = progressFields.filter(field => {
     const value = field.value.trim();
     return !field.disabled && value && (!(field instanceof HTMLInputElement) || cityPattern.test(value));
@@ -2533,18 +2650,17 @@ function displayMoney(input) {
   return Number.isFinite(value) && value >= 0 ? money.format(value) : '';
 }
 
-async function copyInvoiceField(value,label) {
+async function copyInvoiceField(value,label,feedback=checkoutStatus,area=$('checklist-copy-fallback')) {
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(value);
-    checkoutStatus.textContent = label + ' copiado.';
+    feedback.textContent = label + ' copiado.';
   } catch {
-    const area = $('checklist-copy-fallback');
     area.hidden = false;
     area.value = value;
     area.focus();
     area.select();
-    checkoutStatus.textContent = 'Copie manualmente o texto selecionado.';
+    feedback.textContent = 'Copie manualmente o texto selecionado.';
   }
 }
 
@@ -2719,6 +2835,11 @@ for (const id of printableFields) {
   $(id).addEventListener('input',refreshInvoiceChecklist);
   $(id).addEventListener('change',refreshInvoiceChecklist);
 }
+</script>
+<script>
+$('modo-simples').addEventListener('click',() => switchConsultationMode('quick'));
+$('modo-avancado').addEventListener('click',() => switchConsultationMode('advanced'));
+$('continuar-avancada').addEventListener('click',() => switchConsultationMode('advanced',true));
 </script>
 </body>
 </html>
