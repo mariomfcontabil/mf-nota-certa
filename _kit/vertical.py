@@ -53,9 +53,7 @@ def draw_qr(url, cx, label):
                 d.rectangle((xp,yp,xp+module-1,yp+module-1),fill='#000000')
     d.text((cx,1630),label,fill='#F8D991',font=font(34,True),anchor='mt')
 
-base=BASE
-draw_qr(base,308,'Abrir MF Nota Certa')
-draw_qr(PDF_URL,772,'Tutorial em PDF')
-center(1683,'QR da esquerda: abra o MF Nota Certa.',29,'#F9EFE1')
-center(1721,'QR da direita: baixe o tutorial atualizado.',29,'#F9EFE1')
-im.save(Path('mf-nota-certa-status-dois-qr.png'),optimize=True)
+draw_qr(BASE+'#ajuda',540,'Abra a Ajuda do MF Nota Certa')
+center(1683,'Escaneie para consultar o serviço, baixar o tutorial',29,'#F9EFE1')
+center(1721,'e acessar o kit completo.',29,'#F9EFE1')
+im.save(Path('mf-nota-certa-status-ajuda.png'),optimize=True)

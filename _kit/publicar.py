@@ -35,13 +35,13 @@ def build(stage):
     for layout in ('quadrada', 'vertical'):
         run(sys.executable, KIT / (layout + '.py'), cwd=stage,
             env=dict(os.environ, MF_TUTORIAL_VERSION=suffix))
-    run('node', KIT / 'validar.cjs', BASE, url, cwd=stage)
+    run('node', KIT / 'validar.cjs', BASE + '#ajuda', cwd=stage)
     help_url = BASE + '#ajuda'
     message = (KIT / 'mensagem.txt').read_text().format(ajuda=help_url)
     assert re.findall(r'https?://\S+', message) == [help_url]
     files = {
-        'arte-quadrada-whatsapp.png': (stage / 'mf-nota-certa-quadrada-dois-qr.png').read_bytes(),
-        'arte-vertical-status.png': (stage / 'mf-nota-certa-status-dois-qr.png').read_bytes(),
+        'arte-quadrada-whatsapp.png': (stage / 'mf-nota-certa-quadrada-ajuda.png').read_bytes(),
+        'arte-vertical-status.png': (stage / 'mf-nota-certa-status-ajuda.png').read_bytes(),
         PDF: pdf, 'mensagem-whatsapp.txt': message.encode(),
     }
     with ZipFile(stage / ZIP, 'w') as archive:
