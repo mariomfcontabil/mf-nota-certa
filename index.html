@@ -342,6 +342,13 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
   #resultado-simples-copiar { width:100% }
   #resultado-simples-copiar button { flex:1 1 auto }
 }
+#busca-servico-painel { margin:0 0 1rem }
+#busca-servico-status:empty,#busca-servico-resultados:empty { display:none }
+#busca-servico-resultados { list-style:none; padding:0; margin:.45rem 0 0; display:grid; gap:.35rem }
+#busca-servico-resultados button { width:100%; min-height:44px; border-radius:6px; text-align:left; padding:.6rem .75rem; border-color:var(--borda-input); background:var(--superficie-alt); color:var(--texto-1); font-size:.9rem; overflow-wrap:anywhere }
+#busca-servico-resultados button:hover { background:var(--hover); border-color:var(--ouro) }
+#busca-servico-resultados button span { display:block; color:var(--texto-2); font-size:.82rem; font-weight:500; margin-top:.15rem }
+@media screen and (max-width:520px) { #busca-servico { font-size:16px } }
 </style>
 </head>
 <body>
@@ -380,10 +387,17 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <button type="button" id="modo-simples" aria-pressed="true">Consulta simples</button>
 <button type="button" id="modo-avancado" aria-pressed="false">Consulta avançada</button>
 </div>
-<p id="modo-orientacao" aria-live="polite">Escolha o CNAE e o serviço para consultar o código nacional e a NBS.</p>
+<p id="modo-orientacao" aria-live="polite">Busque pelo nome do serviço ou selecione o CNAE para consultar o código nacional e a NBS.</p>
 </div>
 <form id="consulta" data-mode="quick" novalidate>
 <div id="avisos" class="alert" role="alert"></div>
+<div id="busca-servico-painel">
+<label for="busca-servico">Buscar pelo nome do serviço</label>
+<input type="search" id="busca-servico" autocomplete="off" placeholder="Ex.: limpeza de escritório, pintura predial" aria-describedby="busca-servico-ajuda busca-servico-status">
+<small id="busca-servico-ajuda">Digite o que foi feito e selecione uma opção para preencher o CNAE e o serviço.</small>
+<p id="busca-servico-status" class="field-hint" role="status"></p>
+<ul id="busca-servico-resultados" aria-label="Resultados da busca"></ul>
+</div>
 <div class="service-fields">
 <div>
 <label for="atividade">Atividade (CNAE)</label>
@@ -614,7 +628,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <h2 id="ajuda-title">Ajuda para preencher a NFS-e</h2>
 <p>Use o MF Nota Certa para preparar e conferir os dados antes de emitir no portal autorizado.</p>
 <ul class="ajuda-modos">
-<li><strong>Consulta simples.</strong> Selecione o CNAE e o serviço realizado e toque em <b>Consultar serviço</b>. Copie o código de tributação nacional e a NBS, se disponíveis. Para ver tributos e preparar o PDF, toque em <b>Continuar na consulta avançada</b>.</li>
+<li><strong>Consulta simples.</strong> Use <b>Buscar pelo nome do serviço</b> e digite, por exemplo, “limpeza de escritório”, “pintura predial” ou “troca de mola de porta”. Escolha o resultado que descreve o trabalho realizado. O CNAE e o serviço são preenchidos automaticamente. Toque em <b>Consultar serviço</b>. Você também pode selecionar o CNAE manualmente. Copie o código de tributação nacional e a NBS, se disponíveis. Para ver tributos e preparar o PDF, toque em <b>Continuar na consulta avançada</b>.</li>
 <li><strong>Consulta avançada.</strong> Abra esse modo para preencher os dados da operação, conferir retenções, usar o checklist e gerar a prévia. Siga o passo a passo abaixo.</li>
 </ul>
 <ol class="ajuda-passos">
@@ -624,7 +638,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <li><strong>Revise os tributos e o valor líquido.</strong> Preencha apenas as pendências indicadas na tabela. No Simples Nacional, informe o RBT12 para a estimativa do DAS. Se houver ISS retido, use o RBT12 de referência que a tela indicar. No IBS/CBS, siga as opções da competência exibida e confira o enquadramento do contrato.</li>
 <li><strong>Gere a prévia e emita a nota.</strong> Abra <b>Dados para a prévia em PDF</b> para completar a identificação das partes. Clique em <b>Gerar PDF da prévia</b>, escolha <b>Salvar como PDF</b> e use o arquivo para conferir o preenchimento. A emissão oficial é feita no portal autorizado.</li>
 </ol>
-<details><summary>O serviço não aparece na lista</summary><p>Abra <b>Matriz fiscal</b> e verifique as opções do CNAE. Se nenhuma corresponder, escolha <b>Outro serviço / preciso confirmar</b> e confira a classificação com a contabilidade antes de emitir.</p></details>
+<details><summary>O serviço não aparece na busca ou na lista</summary><p>Tente uma palavra mais curta, como “limpeza” ou “mola”. Você também pode abrir <b>Matriz fiscal</b> e verificar as opções do CNAE. Se nenhuma corresponder, escolha <b>Outro serviço / preciso confirmar</b> e confira a classificação com a contabilidade antes de emitir.</p></details>
 <details><summary>Quero reaproveitar dados em próximas consultas</summary><p>Em <b>Minha empresa</b>, salve o regime e o município/UF do prestador. Em <b>Cadastro de ISS</b>, cadastre as alíquotas municipais por serviço. Para levar esse cadastro a outro computador, exporte o arquivo JSON e importe no novo navegador.</p></details>
 <div class="actions ajuda-acoes">
 <a class="button-download" href="tutorial-mf-nota-certa.pdf" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
@@ -1406,20 +1420,20 @@ for (const [code, name] of activities) {
     button.type = 'button';
     button.textContent = 'Selecionar';
     button.setAttribute('aria-label', 'Selecionar ' + entry.name);
-    button.addEventListener('click', () => {
-      activity.value = code;
-      populateServices();
-      service.value = String(index);
-      result.hidden = true;
-      $('resultado-simples').hidden = true;
-      updateQuestions();
-      if (submitted) validate();
-      (isQuickConsultation() ? $('consulta-submit') : $('servico')).focus();
-    });
+    button.addEventListener('click',() => chooseConsultationService(code,index));
     row.append(label, button);
     section.append(row);
   });
   $('tabela').append(section);
+}
+
+function chooseConsultationService(code,index) {
+  activity.value = code;
+  populateServices();
+  service.value = String(index);
+  service.dispatchEvent(new Event('input',{bubbles:true}));
+  service.dispatchEvent(new Event('change',{bubbles:true}));
+  (isQuickConsultation() ? $('consulta-submit') : $('servico')).focus();
 }
 
 function isQuickConsultation() {
@@ -1473,13 +1487,14 @@ function switchConsultationMode(mode, focusService = false) {
   if (form.dataset.mode === mode) return;
   form.dataset.mode = mode;
   const quick = isQuickConsultation();
+  $('busca-servico-painel').hidden = !quick;
   $('consulta-avancada-campos').hidden = quick;
   $('descricao-avancada').hidden = quick;
   $('empresa-perfil').hidden = quick;
   $('modo-simples').setAttribute('aria-pressed',String(quick));
   $('modo-avancado').setAttribute('aria-pressed',String(!quick));
   $('modo-orientacao').textContent = quick ?
-    'Escolha o CNAE e o serviço para consultar o código nacional e a NBS.' :
+    'Busque pelo nome do serviço ou selecione o CNAE para consultar o código nacional e a NBS.' :
     'Complete os dados do serviço para conferir tributos, retenções, checklist e prévia em PDF.';
   $('consulta-submit').textContent = quick ? 'Consultar serviço' : 'Consultar preenchimento';
   $('resultado-simples').hidden = true;
@@ -1562,7 +1577,8 @@ form.addEventListener('submit', event => {
   refreshInvoiceChecklist();
   document.querySelector('#resultado-titulo').focus();
 });
-form.addEventListener('input', () => {
+form.addEventListener('input', event => {
+  if (event.target.id === 'busca-servico') return;
   result.hidden = true;
   $('resultado-simples').hidden = true;
   updateQuestions();
@@ -2840,6 +2856,97 @@ for (const id of printableFields) {
 $('modo-simples').addEventListener('click',() => switchConsultationMode('quick'));
 $('modo-avancado').addEventListener('click',() => switchConsultationMode('advanced'));
 $('continuar-avancada').addEventListener('click',() => switchConsultationMode('advanced',true));
+</script>
+<script>
+function normalizeServiceSearch(value) {
+  return value.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase()
+    .replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+const serviceAliases = new Map([
+  ['4330-4/02:2','troca de mola de porta substituição de mola hidráulica blindex conserto de porta de vidro'],
+  ['4330-4/04:0','pintura predial pintura de prédio pintura de obra'],
+  ['4330-4/04:1','pintura predial pintura de prédio repintura de fachada'],
+  ['8121-4/00:0','limpeza de escritório limpeza predial faxina comercial faxina empresarial'],
+  ['8129-0/00:2','dedetização desratização desinsetização combate a pragas'],
+  ['4321-5/00:0','instalação elétrica eletricista instalação de fiação'],
+  ['4322-3/01:2','instalação de gás tubulação de gás'],
+  ['4322-3/02:0','instalação de ar condicionado climatização ar central']
+]);
+const ignoredSearchWords = new Set(['a','as','o','os','de','da','das','do','dos','e','em','para','por','um','uma']);
+const searchableServices = activities.flatMap(([code,activityName]) => matrix[code].map((entry,index) => {
+  const title = normalizeServiceSearch(entry.name);
+  const group = normalizeServiceSearch(activityName);
+  const alias = normalizeServiceSearch(serviceAliases.get(code + ':' + index) || '');
+  const codeWords = normalizeServiceSearch(code) + ' ' + code.replace(/\D/g,'');
+  return {code,index,name:entry.name,activityName,title,group,alias,
+    words:(title + ' ' + alias + ' ' + group + ' ' + codeWords).split(' ')};
+}));
+const serviceSearch = $('busca-servico');
+const serviceSearchResults = $('busca-servico-resultados');
+const serviceSearchStatus = $('busca-servico-status');
+
+function searchServices() {
+  const query = normalizeServiceSearch(serviceSearch.value);
+  const terms = query.split(' ').filter(word => word && !ignoredSearchWords.has(word));
+  serviceSearchResults.replaceChildren();
+  if (!terms.length || terms.join('').length < 2) {
+    serviceSearchStatus.textContent = serviceSearch.value.trim() ? 'Digite pelo menos duas letras do nome do serviço.' : '';
+    return;
+  }
+  const results = searchableServices
+    .filter(item => terms.every(term => item.words.some(word => word.startsWith(term))))
+    .map(item => ({
+      item,
+      score: (item.title.includes(query) ? 100 : 0) + (item.alias.includes(query) ? 80 : 0) +
+        terms.reduce((sum,term) => sum + (item.title.split(' ').some(word => word.startsWith(term)) ? 4 :
+          item.alias.split(' ').some(word => word.startsWith(term)) ? 3 : 1),0)
+    }))
+    .sort((a,b) => b.score-a.score || a.item.name.localeCompare(b.item.name,'pt-BR'));
+  if (!results.length) {
+    serviceSearchStatus.textContent = 'Nenhum serviço encontrado. Tente um termo mais curto ou escolha o CNAE na lista abaixo.';
+    return;
+  }
+  const visibleCount = Math.min(results.length,8);
+  serviceSearchStatus.textContent = results.length === 1 ? '1 opção encontrada. Selecione o serviço.' :
+    results.length > visibleCount ? 'Mostrando ' + visibleCount + ' de ' + results.length + ' opções. Refine a busca se precisar.' :
+    results.length + ' opções encontradas. Escolha a que corresponde ao serviço realizado.';
+  for (const {item} of results.slice(0,visibleCount)) {
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.type = 'button';
+    const label = document.createElement('strong');
+    const code = document.createElement('span');
+    label.textContent = item.name;
+    code.textContent = item.code + ' · ' + item.activityName;
+    button.append(label,code);
+    button.addEventListener('click',() => {
+      chooseConsultationService(item.code,item.index);
+      serviceSearchResults.replaceChildren();
+      serviceSearchStatus.textContent = 'Selecionado: ' + item.name + ' · CNAE ' + item.code + '.';
+    });
+    li.append(button);
+    serviceSearchResults.append(li);
+  }
+}
+
+serviceSearch.addEventListener('input',searchServices);
+serviceSearch.addEventListener('keydown',event => {
+  if (event.key === 'Enter' || event.key === 'ArrowDown') {
+    event.preventDefault();
+    serviceSearchResults.querySelector('button')?.focus();
+  } else if (event.key === 'Escape') {
+    serviceSearch.value = '';
+    searchServices();
+  }
+});
+form.addEventListener('reset',() => queueMicrotask(searchServices));
+for (const field of [activity,service]) {
+  field.addEventListener('change',() => {
+    serviceSearchResults.replaceChildren();
+    serviceSearchStatus.textContent = '';
+  });
+}
 </script>
 </body>
 </html>
