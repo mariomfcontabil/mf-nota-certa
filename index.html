@@ -1,0 +1,2402 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MF Nota Certa | Guia de preenchimento da NFS-e</title>
+<link rel="icon" type="image/png" href="mf-ativo-0.png">
+<style>
+:root {
+  color-scheme: dark;
+  --fundo: #141312;
+  --superficie: #1f1d19;
+  --superficie-alt: #272421;
+  --hover: #2c2925;
+  --borda: #353127;
+  --borda-input: #514a3d;
+  --texto-1: #f0ece5;
+  --texto-2: #b7ada2;
+  --ouro: #c9901a;
+  --ouro-h: #e6ab30;
+  --ouro-texto: #e6b34d;
+  --ouro-bg: #352b18;
+  --perigo: #ff9b91;
+  --perigo-bg: #371f1b;
+  --perigo-borda: #964c43;
+  --sombra: #0003;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --fundo: #f2f0ec;
+  --superficie: #fff;
+  --superficie-alt: #faf8f5;
+  --hover: #f0ede8;
+  --borda: #e4ddd4;
+  --borda-input: #948a7e;
+  --texto-1: #1c1a16;
+  --texto-2: #5a5450;
+  --ouro-texto: #795005;
+  --ouro-bg: #fff1d3;
+  --perigo: #8d201b;
+  --perigo-bg: #fff1eb;
+  --perigo-borda: #ab483f;
+  --sombra: #3425130d;
+}
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+body { margin: 0; background: var(--fundo); color: var(--texto-1); font: 1rem/1.55 Geist, system-ui, sans-serif }
+h1,h2,p,dl { margin: 0 }
+a { color: var(--ouro-texto); text-underline-offset: .18em }
+:focus-visible { outline: 2px solid var(--ouro-h); outline-offset: 4px }
+.shell { display: grid; grid-template-columns: 228px minmax(0,1fr); min-height: 100vh }
+.sidebar { position: sticky; top: 0; align-self: start; height: 100vh; display: flex; flex-direction: column; background: #1a1815; color: #f0ece5; border-right: 1px solid #353127 }
+.brand { display: flex; align-items: center; min-height: 88px; padding: .85rem .9rem; border-bottom: 1px solid #353127 }
+.brand img { display: block; width: 100%; max-width: 220px; height: auto }
+.sidebar nav { display: grid; gap: .5rem; padding: 1.1rem .85rem }
+.sidebar nav a { display: flex; gap: .7rem; align-items: center; min-height: 44px; padding: .55rem .75rem; text-decoration: none; color: #d4c9b9; border: 1px solid transparent; border-radius: 8px; font-size: .9rem; font-weight: 650 }
+.sidebar nav a:hover { background: #28241d; color: #fff }
+.sidebar nav a[aria-current="location"] { background: #332916; border-color: #493821; color: #f0bf60 }
+.nav-symbol { width: 1.35rem; text-align: center; color: #e0b051 }
+.workspace { min-width: 0 }
+.topbar { min-height: 68px; display: flex; align-items: center; background: var(--superficie); border-bottom: 1px solid var(--borda) }
+.topbar-inner { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: min(1100px,100%); margin-inline: auto; padding: .6rem clamp(1rem,4vw,2.5rem) }
+.topbar-title { font-size: .9rem; font-weight: 650; color: var(--texto-2) }
+main { width: min(1100px,100%); margin: auto; padding: clamp(1rem,4vw,2.5rem) clamp(1rem,4vw,2.5rem) 3rem }
+.hero { border: 1px solid #594622; border-radius: 14px; padding: clamp(1.3rem,4vw,2.35rem); color: #f0ece5; background: radial-gradient(ellipse at 93% 5%, #58401d, transparent 58%), #231e16; box-shadow: 0 10px 26px var(--sombra) }
+.hero h1 { font-size: clamp(2rem,5vw,3.1rem); line-height: 1.12; letter-spacing: -.045em }
+.hero p { color: #d5c8b5; margin-top: .65rem; max-width: 61ch }
+.card { margin-top: 1.2rem; background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: clamp(1rem,3vw,1.55rem); box-shadow: 0 5px 16px var(--sombra); scroll-margin-top: 1rem }
+h2 { font-size: 1.28rem; letter-spacing: -.025em; line-height: 1.3 }
+.card > p { color: var(--texto-2); margin-top: .45rem }
+form { margin-top: 1.25rem }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem 1.2rem }
+.full { grid-column: 1/-1; min-width: 0 }
+label { display: block; font-size: .9rem; font-weight: 680; margin-bottom: .38rem }
+input,select,textarea { width: 100%; min-height: 44px; border: 1px solid var(--borda-input); border-radius: 7px; padding: .62rem .75rem; font: inherit; background: var(--superficie-alt); color: inherit }
+input::placeholder,textarea::placeholder { color: var(--texto-2) }
+input:focus,select:focus,textarea:focus { border-color: var(--ouro) }
+select { appearance: none; padding-right: 2rem; background-image: linear-gradient(45deg,transparent 50%,var(--ouro-texto) 50%),linear-gradient(135deg,var(--ouro-texto) 50%,transparent 50%); background-position: right 16px center,right 11px center; background-size: 5px 5px; background-repeat: no-repeat }
+select:disabled { opacity: .65; cursor: not-allowed }
+textarea { min-height: 5rem; resize: vertical }
+small { display: block; margin-top: .35rem; color: var(--texto-2); font-size: .875rem }
+.error:empty { display: none }
+.actions { display: flex; gap: .65rem; flex-wrap: wrap; margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid var(--borda) }
+button { font: inherit; font-weight: 720; min-height: 42px; padding: .55rem .9rem; border: 1px solid transparent; border-radius: 7px; cursor: pointer }
+button[type=submit] { background: var(--ouro-h); color: #211603 }
+button[type=submit]:hover { background: #f3ba4d }
+button[type=reset], .theme-button, .linha button { background: var(--superficie-alt); color: var(--texto-1); border-color: var(--borda-input) }
+button[type=reset]:hover, .theme-button:hover, .linha button:hover { background: var(--hover); border-color: var(--ouro) }
+.theme-button { font-size: .875rem; white-space: nowrap }
+.error,.alert { color: var(--perigo) }
+.alert:not(:empty) { background: var(--perigo-bg); border: 1px solid var(--perigo-borda); border-radius: 8px; padding: .75rem 1rem; margin-bottom: 1.15rem }
+.alert ul { margin: .35rem 0 0; padding-left: 1.35rem }
+.alert a { color: inherit }
+[aria-invalid=true] { border-color: var(--perigo); box-shadow: 0 0 0 1px var(--perigo) }
+#previdencia { padding: 1rem; border-radius: 8px; background: var(--fundo); border: 1px solid var(--borda) }
+#resultado .pending { margin: .9rem 0 1.1rem; padding: .75rem 1rem; background: var(--ouro-bg); color: var(--ouro-texto); border-left: 3px solid var(--ouro); border-radius: 6px }
+dl { display: grid; grid-template-columns: minmax(9.5rem,1fr) minmax(0,2.5fr); gap: 0 1rem }
+dt,dd { padding: .64rem 0; border-bottom: 1px solid var(--borda) }
+dt { font-weight: 690 }
+dd { margin: 0; color: var(--texto-2); overflow-wrap: anywhere; white-space: pre-wrap }
+#resultado h2:not(:first-child) { margin-top: 1.6rem }
+#resultado details { margin-top: 1.2rem }
+summary { cursor: pointer; font-weight: 720 }
+summary::marker { color: var(--ouro-texto) }
+summary:hover { color: var(--ouro-texto) }
+#matriz > summary { font-size: 1.13rem }
+#matriz > p { color: var(--texto-2); margin: .6rem 0 1rem }
+#tabela details { margin-top: .4rem; border: 1px solid var(--borda); border-radius: 7px; background: var(--superficie-alt); padding: .65rem .8rem }
+.linha { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .65rem 0; border-top: 1px solid var(--borda); margin-top: .45rem }
+.linha button { flex: none }
+@media (max-width: 760px) {
+  .shell { display: block }
+  .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; border-right: 0; border-bottom: 1px solid #353127 }
+  .brand { border: 0; min-height: auto; width: 190px; padding: .4rem .75rem }
+  .sidebar nav { display: flex; flex-wrap: wrap; padding: .4rem .7rem }
+  .topbar { min-height: 54px }
+}
+@media (max-width: 520px) {
+  .grid,dl { grid-template-columns: minmax(0,1fr) }
+  dt { border: 0; padding-bottom: 0 }
+  dd { padding-top: .2rem }
+  .linha { flex-direction: column; align-items: flex-start; gap: .35rem }
+}
+:root {
+  --fundo:#11100f;
+  --superficie:#1a1816;
+  --superficie-alt:#211e1b;
+  --borda:#383127;
+  --borda-input:#594d3c;
+  --ouro:#c9901a;
+  --ouro-h:#f2c266;
+  --ouro-texto:#edc477;
+  --grid-line:#d5a34b13;
+}
+:root[data-theme="light"] { --grid-line:#8b621716 }
+.shell { grid-template-columns: 248px minmax(0,1fr) }
+.sidebar { background: linear-gradient(160deg,#231e17,#161412 50%); border-color:#463724 }
+.brand { gap:.65rem; padding:1rem .95rem; min-height:80px }
+.brand img { width:50px; height:46px; object-fit:contain; filter:drop-shadow(0 3px 8px #bd872744) }
+.brand-text { display:grid; color:#f6eddd; font-size:.99rem; font-weight:760; line-height:1.18 }
+.brand-text small { margin-top:.25rem; color:#c6b59a; font-weight:500; font-size:.78rem }
+.sidebar nav { padding-top:1.3rem }
+.sidebar nav a { border-radius:5px; border-left-width:3px }
+.sidebar nav a[aria-current="location"] { border-left-color:#e6ab30; background:linear-gradient(90deg,#44321b,#292119); box-shadow:0 5px 12px #0003 }
+.topbar { min-height:62px }
+.topbar-title strong { color:var(--texto-1) }
+.topbar-title span { padding-inline:.4rem; color:var(--ouro-texto) }
+.theme-button { border-radius:5px }
+main { width:min(1250px,100%); padding-top:1.6rem }
+.hero {
+  position:relative; isolation:isolate; overflow:hidden; min-height:206px;
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(160px,29%); align-items:center;
+  gap:1.1rem; border-radius:9px;
+  background:radial-gradient(ellipse at 79% 48%,#533918 0%,#2a2117 39%,#181612 76%);
+  box-shadow:inset 0 1px #e8b65d25,0 10px 30px #0003;
+}
+.hero::before { content:""; position:absolute; inset:0; z-index:-1; background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size:26px 26px; mask-image:linear-gradient(90deg,transparent 12%,#000) }
+.hero h1 { color:#fff4de; line-height:1.03; font-size:clamp(2.1rem,5vw,3.65rem) }
+.hero p { max-width:49ch; font-size:clamp(.94rem,1.5vw,1.07rem); margin-top:.75rem }
+.hero-mark { position:relative; display:grid; place-items:center; min-height:150px }
+.hero-mark::before,.hero-mark::after { content:""; width:156px; aspect-ratio:1; position:absolute; border:1px solid #c7944c60; transform:rotate(45deg); pointer-events:none }
+.hero-mark::after { width:126px; border-style:dashed; border-color:#eac47a58 }
+.hero-mark img { width:min(100%,195px); height:auto; z-index:1; position:relative; filter:drop-shadow(0 7px 14px #0009) }
+.panel-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(215px,27%); gap:1rem; align-items:start; margin-top:1rem }
+.panel-grid > .card { margin:0 }
+.card { border-radius:8px }
+.form-card { padding:0; overflow:hidden }
+.panel-heading { padding:1.05rem 1.35rem; border-bottom:1px solid var(--borda); background:linear-gradient(95deg,var(--ouro-bg),var(--superficie) 62%) }
+.panel-heading p { color:var(--texto-2); margin-top:.25rem; font-size:.9rem }
+form { margin:0; padding:1.2rem 1.35rem 1.3rem }
+.service-fields { display:grid; gap:.95rem; padding:1rem; border:1px solid var(--borda); border-left:3px solid var(--ouro); background:var(--superficie-alt); border-radius:6px; margin-bottom:1.15rem }
+.service-fields input,.service-fields select,.service-fields textarea { background-color:var(--fundo) }
+.service-fields label { color:var(--texto-1); font-size:.95rem }
+.context-title { font-size:.98rem; margin:0 0 .75rem }
+.panel-aside { display:grid; gap:1rem }
+.panel-aside .card { margin:0; padding:1rem }
+.panel-aside h2 { font-size:1.03rem }
+.panel-aside p { margin:.55rem 0 .7rem; font-size:.9rem }
+progress { width:100%; height:8px; display:block; border:0; border-radius:99px; overflow:hidden; appearance:none; accent-color:var(--ouro); background:var(--superficie-alt) }
+progress::-webkit-progress-bar { background:var(--superficie-alt) }
+progress::-webkit-progress-value { background:linear-gradient(90deg,var(--ouro),var(--ouro-h)); border-radius:99px }
+progress::-moz-progress-bar { background:var(--ouro); border-radius:99px }
+.panel-aside a { display:block; font-size:.9rem; font-weight:700; margin-top:.6rem }
+button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-shadow:0 4px 16px #c9901a30 }
+#resultado { border-top:2px solid var(--ouro) }
+@media(max-width:1080px) { .shell { grid-template-columns:196px minmax(0,1fr) } }
+@media(max-width:970px) { .panel-grid { grid-template-columns:1fr } .panel-aside { grid-template-columns:1fr 1fr } }
+@media(max-width:760px) {
+  .brand { width:auto; min-height:60px; padding:.5rem .8rem }
+  .brand img { width:42px; height:39px }
+  main { padding-top:1rem }
+  .hero { min-height:0 }
+}
+@media(max-width:520px) {
+  .sidebar nav { width:100%; padding-top:0 }
+  .hero { grid-template-columns:minmax(0,1fr) 77px; gap:.45rem; padding:1rem }
+  .hero-mark { min-height:75px }
+  .hero-mark::before { width:59px }
+  .hero-mark::after { width:48px }
+  .hero h1 { font-size:clamp(1.7rem,8vw,2.1rem) }
+  .panel-aside { grid-template-columns:1fr }
+  form,.panel-heading { padding-inline:.9rem }
+}
+
+.field-hint { display:block; color:var(--texto-2); font-size:.86rem; margin-top:.32rem }
+#annex-live { margin:.1rem 0 0; padding:.7rem .9rem; background:var(--ouro-bg); color:var(--ouro-texto); border-left:3px solid var(--ouro); border-radius:5px }
+#simples-inputs { padding:1rem; border:1px solid var(--borda); border-radius:7px; background:var(--fundo) }
+#simples-inputs h3 { margin:0 0 .75rem }
+#simples-result { margin:1.25rem 0; padding:1rem; border:1px solid var(--borda); border-radius:7px; background:var(--fundo) }
+#simples-result h3 { margin:0 0 .5rem }
+.table-scroll { overflow-x:auto }
+.tax-table { width:100%; border-collapse:collapse; margin:.5rem 0; font-variant-numeric:tabular-nums; font-size:.9rem }
+.tax-table th,.tax-table td { text-align:left; padding:.5rem .65rem; border-bottom:1px solid var(--borda) }
+.tax-table th { color:var(--ouro-texto) }
+#empresa-perfil button { margin:.4rem .2rem 0 0; background:var(--superficie-alt); color:var(--texto-1); border-color:var(--borda-input); font-size:.85rem }
+#empresa-perfil label { margin-top:.65rem }
+#empresa-perfil input { min-width:0 }
+#withholding-panel { margin:1.25rem 0; padding:1rem; border:1px solid var(--borda); border-radius:7px; background:var(--fundo) }
+#withholding-panel h3 { margin:0 0 .6rem }
+.withholding-table { min-width:680px }
+.withholding-table th[scope=row] { width:27%; vertical-align:top; color:var(--texto-1) }
+.withholding-table td { vertical-align:top }
+.withholding-table small { font-weight:400 }
+.withholding-table input,.withholding-table select { min-width:85px; font-size:.875rem }
+.withholding-table input:disabled { opacity:.5 }
+.withholding-totals dt:last-of-type,.withholding-totals dd:last-of-type { color:var(--ouro-texto); font-weight:750 }
+#iss-registration { padding-inline:0 }
+#iss-registry-list button, #iss-use-current { margin:.2rem; background:var(--superficie-alt); color:var(--texto-1); border-color:var(--borda-input); }
+#rtc-panel,#iss-backup { margin:1.1rem 0; padding:1rem; border:1px solid var(--borda); border-radius:7px; background:var(--fundo) }
+#rtc-panel h3,#iss-backup h3 { margin:0 0 .55rem }
+#rtc-choice,#rtc-base-box,#iss-backup label,#iss-backup button { margin-top:.75rem }
+#iss-backup button { background:var(--superficie-alt); color:var(--texto-1); border-color:var(--borda-input); }
+#iss-backup button:disabled { opacity:.5; cursor:default }
+.backup-check input { width:auto; min-height:auto; vertical-align:middle }
+#nota-impressao { display:none }
+#gerar-nota-pdf { background:var(--ouro-h); color:#211603 }
+#pdf-complementos > .grid { margin-top:.75rem }
+@page { size:A4; margin:13mm 12mm }
+@media print {
+  body:has(#nota-impressao.ready-to-print) { margin:0; background:#fff; color:#24201b; font:9pt/1.45 Arial,sans-serif }
+  body:has(#nota-impressao.ready-to-print) > .shell { display:none !important }
+  #nota-impressao.ready-to-print { display:block; color:#24201b }
+  #nota-impressao .nota-header { display:flex; align-items:center; gap:12pt; padding-bottom:9pt; border-bottom:2pt solid #997320; margin-bottom:9pt }
+  #nota-impressao .nota-header img { width:62pt; height:auto }
+  #nota-impressao h1 { margin:0 0 3pt; color:#201a11; font-size:18pt; line-height:1.12 }
+  #nota-impressao .nota-warning { color:#59400e; font-weight:bold }
+  #nota-impressao .nota-section { margin:8pt 0; border:1px solid #c4b8a5; border-radius:4pt; overflow:hidden }
+  #nota-impressao .nota-section h2 { margin:0; padding:4pt 7pt; color:#262016; background:#f3ede2; border-bottom:1px solid #c4b8a5; font-size:10pt; break-after:avoid; print-color-adjust:exact }
+  #nota-impressao .nota-content { padding:5pt 7pt }
+  #nota-impressao .nota-two { display:grid; grid-template-columns:1fr 1fr; gap:8pt }
+  #nota-impressao .nota-two > section { margin:0 }
+  #nota-impressao dl { display:grid; grid-template-columns:33% minmax(0,1fr); column-gap:6pt }
+  #nota-impressao dt,#nota-impressao dd { padding:2pt 0; border:0; color:inherit; overflow-wrap:anywhere }
+  #nota-impressao dd { white-space:pre-wrap }
+  #nota-impressao table { border-collapse:collapse; width:100%; margin-bottom:3pt }
+  #nota-impressao th,#nota-impressao td { text-align:left; padding:3pt 4pt; border-bottom:1px solid #d8d0c1; vertical-align:top }
+  #nota-impressao thead { display:table-header-group }
+  #nota-impressao tr,#nota-impressao .nota-two,#nota-impressao .nota-header,#nota-impressao .nota-totals { break-inside:avoid }
+  #nota-impressao .nota-totals { border-top:1px solid #bba77b; padding-top:5pt }
+  #nota-impressao .nota-footer { font-size:8pt; color:#534c40; margin-top:7pt }
+}
+.hero .hero-subtitle { font-weight:700; color:#f2c266; margin-top:.55rem }
+@media print { #nota-impressao .nota-product { color:#59400e; font-weight:bold; margin-bottom:3pt } }
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+<a class="brand" href="#consulta-nfse"><img src="mf-ativo-0.png" width="50" height="46" alt=""><span class="brand-text">MF Nota Certa<small>Contábil e Sistemas</small></span></a>
+<nav aria-label="Navegação fiscal">
+<a href="#consulta-nfse" aria-current="location"><span class="nav-symbol" aria-hidden="true">▤</span>Consulta NFS-e</a>
+<a href="#matriz-fiscal"><span class="nav-symbol" aria-hidden="true">▦</span>Matriz fiscal</a>
+<a href="#cadastro-iss"><span class="nav-symbol" aria-hidden="true">%</span>Cadastro de ISS</a>
+</nav>
+</aside>
+<div class="workspace">
+<header class="topbar"><div class="topbar-inner">
+<span class="topbar-title">Fiscal <span aria-hidden="true">/</span> <strong id="workspace-title">Consulta NFS-e</strong></span>
+<button type="button" class="theme-button" id="theme">Modo claro</button>
+</div></header>
+<main id="consulta-nfse">
+<div class="hero" aria-labelledby="page-title">
+<div>
+<h1 id="page-title">MF Nota Certa</h1>
+<p class="hero-subtitle">Guia de preenchimento da NFS-e</p>
+<p class="intro">Escolha o CNAE e o serviço realizado para consultar os códigos da nota e conferir as retenções aplicáveis.</p>
+</div>
+<div class="hero-mark"><img src="mf-ativo-1.webp" width="640" height="548" alt="Brasão da MF Contábil e Sistemas"></div>
+</div>
+<div class="panel-grid">
+<section class="card form-card" aria-labelledby="form-title">
+<div class="panel-heading">
+<h2 id="form-title">Dados do serviço</h2>
+<p>Escolha a atividade e depois o serviço realizado.</p>
+</div>
+<form id="consulta" novalidate>
+<div id="avisos" class="alert" role="alert"></div>
+<div class="service-fields">
+<div>
+<label for="atividade">Atividade (CNAE)</label>
+<select id="atividade" required aria-describedby="atividade-ajuda atividade-erro"><option value="">Selecione uma atividade</option></select>
+<small id="atividade-ajuda">Escolha a atividade que corresponde ao serviço prestado.</small><small class="error" id="atividade-erro"></small>
+</div>
+<div>
+<label for="enquadramento">Serviço realizado</label>
+<select id="enquadramento" required disabled aria-describedby="enquadramento-ajuda enquadramento-erro"><option value="">Escolha primeiro o CNAE</option></select>
+<small id="enquadramento-ajuda">Escolha a opção que descreve o objeto do contrato.</small><small class="error" id="enquadramento-erro"></small>
+</div>
+<div>
+<label for="servico">Descrição para a nota</label>
+<textarea id="servico" rows="3" required aria-describedby="servico-ajuda servico-erro" placeholder="Ex.: substituição de mola hidráulica em porta de vidro"></textarea>
+<small id="servico-ajuda">Descreva o que foi feito. Um CNAE pode abranger serviços diferentes.</small><small class="error" id="servico-erro"></small>
+</div>
+</div>
+<h3 class="context-title">Dados para avaliar as retenções</h3>
+<div class="grid">
+<div>
+<label for="regime">Regime tributário do prestador</label>
+<select id="regime" required aria-describedby="regime-help regime-erro"><option value="">Selecione o regime</option><option>MEI</option><option>Simples Nacional</option><option>Lucro Presumido</option><option>Lucro Real</option><option>Outro regime</option></select><small class="field-hint" id="regime-help">Use o regime em que a empresa está enquadrada na competência da nota.</small>
+<small class="error" id="regime-erro"></small>
+</div>
+<div>
+<label for="tomador">Tipo de tomador</label>
+<select id="tomador" required aria-describedby="tomador-help tomador-erro"><option value="">Selecione o tipo de tomador</option><option>Pessoa física</option><option>Pessoa jurídica privada</option><option>Órgão ou entidade pública</option></select><small class="field-hint" id="tomador-help">Selecione quem contratou o serviço. Para prefeitura, estado ou órgão federal, escolha órgão ou entidade pública.</small>
+<small class="error" id="tomador-erro"></small>
+</div>
+<div>
+<label for="prestador">Município do prestador (UF)</label>
+<input id="prestador" required placeholder="Ex.: Altamira/PA" aria-describedby="prestador-help prestador-erro"><small class="field-hint" id="prestador-help">Informe o município e a UF do estabelecimento do prestador, como Altamira/PA.</small><small class="error" id="prestador-erro"></small>
+</div>
+<div>
+<label for="local">Município onde o serviço foi realizado (UF)</label>
+<input id="local" required placeholder="Ex.: Altamira/PA" aria-describedby="local-help local-erro"><small class="field-hint" id="local-help">Informe onde o serviço foi executado. Repita o município do prestador se forem iguais.</small><small class="error" id="local-erro"></small>
+</div>
+<div class="full">
+<label for="contratacao">Forma de contratação</label>
+<select id="contratacao" required aria-describedby="contratacao-help contratacao-erro"><option value="">Selecione a forma de contratação</option><option>Serviço contratado por resultado</option><option>Empreitada total</option><option>Empreitada parcial ou subempreitada</option><option>Execução por administração</option><option>Disponibilização de mão de obra ao tomador</option><option>Outra forma de contratação</option><option>Preciso confirmar no contrato</option></select><small class="field-hint" id="contratacao-help">Consulte o contrato ou pedido. Se não souber distinguir empreitada, cessão ou serviço por resultado, escolha a opção de confirmação.</small>
+<small class="error" id="contratacao-erro"></small>
+</div>
+<div class="full"><label for="valor-servico">Valor bruto do serviço</label><input id="valor-servico" inputmode="decimal" autocomplete="off" placeholder="Ex. 1.500,00" aria-describedby="valor-servico-help valor-servico-erro"><small class="field-hint" id="valor-servico-help">Informe o valor bruto do serviço na nota, antes de qualquer retenção.</small><small class="error" id="valor-servico-erro" aria-live="polite"></small></div>
+<p class="full" id="annex-live" aria-live="polite" hidden></p>
+<section class="full" id="simples-inputs" hidden aria-labelledby="simples-input-title">
+<h3 id="simples-input-title">Simulação do DAS</h3>
+<div class="grid">
+<div><label for="rbt12">Receita bruta em 12 meses (RBT12)</label><input id="rbt12" inputmode="decimal" autocomplete="off" placeholder="Ex. 180.000,00" aria-describedby="rbt12-help rbt12-erro"><small class="field-hint" id="rbt12-help">Informe a receita bruta dos 12 meses anteriores à competência, conforme o PGDAS-D.</small><small class="error" id="rbt12-erro" aria-live="polite"></small></div>
+
+<p class="full field-hint" id="aliquotas-live" aria-live="polite"></p>
+<div id="escopo-box" class="full" hidden><label for="escopo-simples">Escopo contratado</label><select id="escopo-simples" aria-describedby="escopo-simples-help"><option value="">A confirmar</option><option value="obra">Execução de obra de engenharia</option><option value="avulso">Reparo, instalação ou pintura avulsa</option></select><small class="field-hint" id="escopo-simples-help">Veja se o prestador assumiu a execução de uma obra de engenharia ou foi contratado apenas para o reparo, instalação ou pintura.</small></div>
+<div id="fator-box" hidden><label for="fator-r">Fator R (%)</label><input id="fator-r" inputmode="decimal" placeholder="Ex. 28,00" aria-describedby="fator-r-help"><small class="field-hint" id="fator-r-help">Use o percentual apurado no PGDAS-D com folha e encargos e receita bruta. Ex.: para 28%, digite 28,00.</small></div>
+</div>
+</section>
+<div id="previdencia" class="full" hidden>
+<div class="grid">
+<div id="anexo-box" hidden><label for="anexo">Anexo do Simples para este serviço</label><select id="anexo" aria-describedby="anexo-help"><option>A confirmar</option><option>Anexo III</option><option>Anexo IV</option><option>Anexo V</option><option>Outro anexo</option></select><small class="field-hint" id="anexo-help">O sistema sugere o anexo conforme o serviço. Altere somente se a escrituração confirmar outro enquadramento.</small></div>
+<div><label for="cprb">Opção pela CPRB na competência</label><select id="cprb" aria-describedby="cprb-help"><option>A confirmar</option><option>Sim, comprovada</option><option>Não</option></select><small class="field-hint" id="cprb-help">Confirme se a opção pela CPRB se enquadra na competência e no contrato. Em dúvida, deixe A confirmar.</small></div>
+</div>
+</div>
+</div>
+<div class="actions"><button type="submit">Consultar preenchimento</button><button type="reset">Limpar campos</button></div>
+</form>
+</section>
+<aside class="panel-aside" aria-label="Informações da consulta">
+<section class="card" id="empresa-perfil">
+<h2>Minha empresa</h2>
+<p>Salve o regime e o município/UF do prestador preenchidos na consulta para reaproveitar nas próximas notas.</p>
+<label for="empresa-nome">Nome da empresa</label>
+<input id="empresa-nome" placeholder="Opcional" aria-describedby="empresa-nome-help"><small class="field-hint" id="empresa-nome-help">Use um nome que identifique a empresa neste navegador.</small>
+<button type="button" id="salvar-empresa">Salvar dados</button>
+<button type="button" id="remover-empresa" hidden>Remover cadastro</button>
+<small id="empresa-status" role="status"></small>
+</section>
+<section class="card">
+<h2>Preenchimento</h2>
+<p id="progress-label">Nenhum campo preenchido</p>
+<progress id="progress" value="0" max="8" aria-label="Campos obrigatórios válidos"></progress>
+</section>
+<section class="card">
+<h2>Matriz fiscal</h2>
+<p>Consulte as atividades cadastradas e os serviços de cada CNAE.</p>
+<a href="#matriz-fiscal">Ver as 23 atividades</a>
+</section>
+</aside>
+</div>
+<section id="resultado" class="card" hidden aria-labelledby="resultado-titulo">
+<h2 id="resultado-titulo" tabindex="-1">Como preencher a NFS-e</h2>
+<p id="situacao" class="pending"></p>
+<dl id="dados"></dl>
+<section id="simples-result" aria-labelledby="simples-result-title" hidden>
+<h3 id="simples-result-title">Simples Nacional e estimativa do DAS</h3>
+<p id="simples-message"></p>
+<div id="das-table" class="table-scroll" hidden><table class="tax-table">
+<thead><tr><th scope="col">Tributo</th><th scope="col">Alíquota efetiva</th><th scope="col">Valor estimado</th></tr></thead><tbody id="das-body"></tbody></table>
+<p class="field-hint">Estimativa de 2026 para a receita deste serviço, sem ajustes de início de atividade, sublimite, segregação ou ISS retido. Use o PGDAS-D para a apuração mensal. Os valores abaixo na seção de retenções seguem regras próprias.</p>
+</div>
+<details id="faixas" hidden><summary>Tabela de faixas do anexo</summary><div class="table-scroll">
+<table class="tax-table"><thead><tr><th scope="col">Faixa</th><th scope="col">RBT12 até</th><th scope="col">Alíquota nominal</th><th scope="col">Dedução</th></tr></thead><tbody id="faixas-body"></tbody></table></div></details>
+<p class="field-hint"><a href="https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm" target="_blank" rel="noopener">LC 123/2006, art. 18 e Anexos III, IV e V</a> · <a href="https://normas.receita.fazenda.gov.br/sijut2consulta/anexoOutros.action?idArquivoBinario=68149" target="_blank" rel="noopener">SC Cosit 68/2022</a></p>
+</section>
+<section id="rtc-panel" aria-labelledby="rtc-title">
+<h3 id="rtc-title">IBS e CBS · competência de 2026</h3>
+<p id="rtc-message"></p>
+<div id="rtc-choice" hidden>
+<label for="rtc-operation">Classificação da operação conforme o contrato</label><select id="rtc-operation"></select>
+<small>Selecione apenas um tratamento cujos requisitos estejam atendidos. Confira a operação no emissor se nenhuma opção corresponder.</small>
+</div>
+<dl id="rtc-fields"></dl>
+<div id="rtc-base-box" hidden>
+<label for="rtc-base">Base de cálculo do IBS e da CBS</label>
+<input id="rtc-base" inputmode="decimal" aria-describedby="rtc-base-help rtc-base-erro" placeholder="Ex. 1.500,00">
+<small id="rtc-base-help">Use a base apurada no emissor, com as exclusões e ajustes do art. 12 da LC 214. O valor bruto do serviço pode ser diferente da base.</small>
+<small id="rtc-base-erro" class="error" aria-live="polite"></small>
+</div>
+<div id="rtc-amounts" class="table-scroll" hidden>
+<table class="tax-table"><thead><tr><th scope="col">Tributo</th><th scope="col">Alíquota</th><th scope="col">Valor estimado</th></tr></thead><tbody id="rtc-values"></tbody></table>
+<small>Os valores estimados de IBS e CBS não entram no cálculo das retenções desta consulta.</small>
+</div>
+<small><a href="https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/rtc" target="_blank" rel="noopener">Anexo VIII, versão 1.02.00</a> · <a href="https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214compilado.htm" target="_blank" rel="noopener">LC 214/2025</a></small>
+</section>
+<h2>Retenções e alíquotas</h2>
+<dl id="tributos"></dl>
+<section id="withholding-panel" aria-labelledby="withholding-title" hidden>
+<h3 id="withholding-title">Retenções da nota e líquido a receber</h3>
+<p id="withholding-input-needed">Informe o <a href="#valor-servico">valor bruto do serviço</a> e consulte novamente para calcular as retenções.</p>
+<div id="withholding-calculator" hidden>
+<p>O sistema aplica as regras identificadas para a nota. Preencha apenas as pendências indicadas. Se houver dedução ou outra base prevista, informe a base aplicável.</p>
+<div class="grid" id="withholding-questions">
+<div id="withholding-iss-simple-box" hidden><label for="withholding-iss-simple">Referência para o ISS retido no Simples</label>
+<select id="withholding-iss-simple" aria-describedby="withholding-iss-reference-help"><option value="">Selecione a referência</option><option value="same">Usar o RBT12 digitado se ele corresponde ao mês anterior</option><option value="prior">Informar o RBT12 de referência do mês anterior</option><option value="start">Serviço no mês de início da atividade</option><option value="manual">Usar alíquota confirmada ou regra especial</option></select>
+<small class="field-hint" id="withholding-iss-reference-help">Use o RBT12 do mês anterior ao serviço, calculado com os 12 meses que antecedem aquele mês. Para empresa com menos de 13 meses, use a receita anualizada aplicável. Escolha regra especial para benefício, ISS fixo ou sublimite.</small></div>
+<div id="withholding-iss-rbt-box" hidden><label for="withholding-iss-rbt">RBT12 de referência do ISS</label><input id="withholding-iss-rbt" inputmode="decimal" placeholder="Ex. 180.000,00" aria-describedby="withholding-iss-rbt-erro"><small class="error" id="withholding-iss-rbt-erro"></small></div>
+<div id="withholding-payer-box" hidden><label for="withholding-payer">O tomador privado é optante pelo Simples?</label><select id="withholding-payer"><option value="">A confirmar</option><option value="yes">Sim</option><option value="no">Não</option></select><small class="field-hint">Essa informação define a retenção de CSLL, Cofins e PIS/Pasep.</small></div>
+<div id="withholding-payment-box" hidden><label for="withholding-payment">Pagamento ou crédito isolado desta nota?</label><select id="withholding-payment"><option value="">A confirmar</option><option value="yes">Sim, apenas esta nota</option><option value="no">Não, há outros valores ou parcelas</option></select><small class="field-hint">Necessário quando o valor calculado está no limite de dispensa federal.</small></div>
+<div id="withholding-inss-box" hidden><label for="withholding-inss-case">Condição da retenção de INSS</label><select id="withholding-inss-case"><option value="">A confirmar</option><option value="full">Base integral, sem dispensa ou adicional</option><option value="special">Base reduzida ou alíquota específica</option><option value="exempt">Dispensa legal confirmada</option></select><small class="field-hint">Confira as dispensas previdenciárias, materiais, equipamentos e adicionais aplicáveis.</small></div>
+</div>
+<div class="table-scroll">
+<table class="tax-table withholding-table">
+<thead><tr><th scope="col">Tributo</th><th scope="col">Situação</th><th scope="col">Base em R$</th><th scope="col">Alíquota %</th><th scope="col">Valor retido</th></tr></thead>
+<tbody id="withholding-body"></tbody>
+</table>
+</div>
+<dl class="withholding-totals"><dt>Valor bruto</dt><dd id="withholding-gross"></dd><dt>Total das retenções informadas</dt><dd id="withholding-total"></dd><dt>Líquido a receber após retenções</dt><dd id="withholding-net" aria-live="polite"></dd></dl>
+<p class="field-hint" id="withholding-status" role="status"></p>
+</div>
+</section>
+<details><summary>Base legal e tabelas oficiais</summary><ul id="fontes"></ul></details>
+<details id="pdf-complementos">
+<summary>Dados para a prévia em PDF</summary>
+<p class="field-hint">Preencha os dados opcionais que devem aparecer na prévia. O nome do prestador vem do campo Minha empresa.</p>
+<div class="grid">
+<div><label for="pdf-competencia">Competência</label><input type="month" id="pdf-competencia"></div>
+<div><label for="pdf-prestador-id">CPF/CNPJ do prestador</label><input id="pdf-prestador-id" inputmode="numeric" placeholder="Opcional"></div>
+<div><label for="pdf-tomador">Nome ou razão social do tomador</label><input id="pdf-tomador" placeholder="Opcional"></div>
+<div><label for="pdf-tomador-id">CPF/CNPJ do tomador</label><input id="pdf-tomador-id" inputmode="numeric" placeholder="Opcional"></div>
+</div>
+</details>
+<div class="actions"><button type="button" id="gerar-nota-pdf">Gerar PDF da prévia</button></div>
+<p id="pdf-status" role="status" class="field-hint"></p>
+<p id="contrato-pendente" hidden>Confirme no contrato como o serviço foi contratado antes de avaliar retenções.</p>
+
+</section>
+<section class="card" id="matriz-fiscal"><details id="matriz"><summary>Matriz fiscal das 23 atividades</summary>
+<p>Selecione um serviço na matriz para preencher o CNAE e o enquadramento na consulta.</p>
+<div id="tabela"></div></details></section>
+<section class="card" id="cadastro-iss" aria-labelledby="iss-registry-title">
+<h2 id="iss-registry-title">Cadastro de alíquotas de ISS</h2>
+<p>Salve a alíquota municipal por código nacional do serviço. O cadastro fica neste navegador. As retenções do Simples Nacional continuam seguindo a regra do anexo e do RBT12 quando aplicável.</p>
+<form id="iss-registration" novalidate>
+<div class="grid">
+<div><label for="iss-city">Município/UF competente</label><input id="iss-city" placeholder="Ex. Santarém/PA" aria-describedby="iss-city-help"><small id="iss-city-help">Informe onde o ISS é devido para o serviço.</small></div>
+<div><label for="iss-rate">Alíquota municipal (%)</label><input id="iss-rate" inputmode="decimal" placeholder="Ex. 3,50" aria-describedby="iss-rate-help"><small id="iss-rate-help">Informe o percentual vigente. Use zero apenas se o serviço tiver tratamento municipal que dispense o imposto na operação.</small></div>
+<div class="full"><label for="iss-code">Código nacional do serviço</label><select id="iss-code"><option value="">Selecione o código</option></select></div>
+<div><label for="iss-rule-private">Retenção por empresa privada</label><select id="iss-rule-private"><option value="">A confirmar</option><option value="apply">Reter</option><option value="exempt">Sem retenção</option></select></div>
+<div><label for="iss-rule-public">Retenção por órgão público</label><select id="iss-rule-public"><option value="">A confirmar</option><option value="apply">Reter</option><option value="exempt">Sem retenção</option></select></div>
+<div><label for="iss-rule-individual">Retenção por pessoa física</label><select id="iss-rule-individual"><option value="">A confirmar</option><option value="apply">Reter</option><option value="exempt">Sem retenção</option></select></div>
+<div><label for="iss-basis">Fonte ou observação</label><input id="iss-basis" placeholder="Ex. artigo da lei municipal"><small>Opcional. Informe a norma ou condição usada para cadastrar.</small></div>
+</div>
+<div class="actions"><button type="submit">Salvar alíquota</button><button type="button" id="iss-use-current">Usar serviço da consulta</button></div>
+<p id="iss-registry-status" class="field-hint" role="status"></p>
+</form>
+<section id="iss-backup" aria-labelledby="iss-backup-title">
+<h3 id="iss-backup-title">Backup do cadastro de ISS</h3>
+<p>Exporte um arquivo JSON e importe no outro computador. Registros iguais são preservados por padrão.</p>
+<button type="button" id="iss-export">Exportar cadastro</button>
+<label for="iss-backup-file">Arquivo de backup para importar</label>
+<input type="file" id="iss-backup-file" accept=".json,application/json">
+<label class="backup-check" hidden><input type="checkbox" id="iss-backup-replace"> Substituir registros que já existem</label>
+<button type="button" id="iss-confirm-import" disabled>Importar cadastro</button>
+<p id="iss-backup-status" role="status"></p>
+</section>
+<p id="iss-registry-empty">Nenhuma alíquota personalizada cadastrada.</p>
+<div id="iss-registry-table" class="table-scroll" hidden><table class="tax-table withholding-table">
+<thead><tr><th>Município/UF</th><th>Código</th><th>Alíquota</th><th>Retenção</th><th>Fonte</th><th>Ações</th></tr></thead><tbody id="iss-registry-list"></tbody></table></div>
+</section>
+</main>
+</div>
+</div>
+<article id="nota-impressao" aria-label="Prévia de nota fiscal de serviço">
+<header class="nota-header">
+<img src="mf-ativo-1.webp" alt="MF Contábil e Sistemas">
+<div><p class="nota-product">MF Nota Certa</p><h1>Prévia de Nota Fiscal de Serviço</h1><p class="nota-warning">MODELO DE CONFERÊNCIA · SEM VALOR FISCAL</p><p>Competência <strong id="print-competencia"></strong></p></div>
+</header>
+<div class="nota-two">
+<section class="nota-section"><h2>Prestador de serviços</h2><div class="nota-content"><dl>
+<dt>Nome</dt><dd id="print-prestador"></dd><dt>CPF/CNPJ</dt><dd id="print-prestador-id"></dd>
+<dt>Município</dt><dd id="print-prestador-local"></dd><dt>Regime</dt><dd id="print-regime"></dd>
+</dl></div></section>
+<section class="nota-section"><h2>Tomador do serviço</h2><div class="nota-content"><dl>
+<dt>Nome</dt><dd id="print-tomador"></dd><dt>CPF/CNPJ</dt><dd id="print-tomador-id"></dd><dt>Tipo</dt><dd id="print-tomador-tipo"></dd>
+</dl></div></section>
+</div>
+<section class="nota-section"><h2>Serviço e classificação</h2><div class="nota-content">
+<dl><dt>Atividade (CNAE)</dt><dd id="print-cnae"></dd><dt>Local da execução</dt><dd id="print-local"></dd><dt>Contratação</dt><dd id="print-contrato"></dd></dl>
+<dl id="print-servico"></dl><p id="print-situacao"></p></div></section>
+<section class="nota-section"><h2>Retenções e valor da nota</h2><div class="nota-content">
+<table id="print-retencoes"><thead><tr><th>Tributo</th><th>Situação</th><th>Base</th><th>Alíquota</th><th>Valor retido</th></tr></thead><tbody id="print-tributos"></tbody></table>
+<dl class="nota-totals"><dt>Valor bruto</dt><dd id="print-bruto"></dd><dt>Retenções apuradas</dt><dd id="print-retido"></dd><dt>Líquido a receber</dt><dd id="print-liquido"></dd></dl>
+<p id="print-pendencias"></p></div></section>
+<section class="nota-section"><h2>IBS e CBS</h2><div class="nota-content"><p id="print-rtc-message"></p><dl id="print-rtc-fields"></dl>
+<table id="print-rtc-table"><thead><tr><th>Tributo</th><th>Alíquota</th><th>Valor estimado</th></tr></thead><tbody id="print-rtc-values"></tbody></table></div></section>
+<p class="nota-footer">Prévia gerada pelo MF Nota Certa para conferência antes da emissão no sistema autorizado.</p>
+</article>
+<script>
+const activities = [
+['4221-9/03','Manutenção de redes de distribuição de energia elétrica'],
+['4222-7/02','Obras de irrigação'],
+['4311-8/01','Demolição de edifícios e outras estruturas'],
+['4311-8/02','Preparação de canteiro e limpeza de terreno'],
+['4321-5/00','Instalação e manutenção elétrica'],
+['4322-3/01','Instalações hidráulicas, sanitárias e de gás'],
+['4322-3/02','Instalação e manutenção de sistemas centrais de ar condicionado, de ventilação e refrigeração'],
+['4322-3/03','Instalações de sistema de prevenção contra incêndio'],
+['4329-1/04','Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos'],
+['4329-1/99','Outras obras de instalações em construções não especificadas anteriormente'],
+['4330-4/02','Instalação de portas, janelas, tetos, divisórias e armários embutidos de qualquer material'],
+['4330-4/03','Obras de acabamento em gesso e estuque'],
+['4330-4/04','Serviços de pintura de edifícios em geral'],
+['4330-4/05','Aplicação de revestimentos e de resinas em interiores e exteriores'],
+['4330-4/99','Outras obras de acabamento da construção'],
+['4399-1/01','Administração de obras'],
+['4399-1/02','Montagem e desmontagem de andaimes e outras estruturas temporárias'],
+['4399-1/04','Serviços de operação e fornecimento de equipamentos para transporte e elevação de cargas e pessoas para uso em obras'],
+['4399-1/99','Serviços especializados para construção não especificados anteriormente'],
+['8121-4/00','Limpeza em prédios e em domicílios'],
+['8129-0/00','Atividades de limpeza não especificadas anteriormente'],
+['9609-2/99','Outras atividades de serviços pessoais não especificadas anteriormente'],
+['9700-5/00','Serviços domésticos']
+];
+const matrix = {
+  "4221-9/03": [
+    {
+      "name": "Reconstrução de trecho de rede local de baixa ou média tensão, por empreitada",
+      "code": "070202",
+      "nbs": "1.0102.52.20",
+      "nbsName": "Serviços de construção de linhas locais de transmissão de baixa e média tensão",
+      "kind": "obra",
+      "note": "Aplica-se à reconstrução da infraestrutura local. Para conserto isolado de equipamento, use a opção específica.",
+      "review": false
+    },
+    {
+      "name": "Conserto isolado de transformador de distribuição",
+      "code": "140101",
+      "nbs": "1.2001.89.00",
+      "nbsName": "Serviços de manutenção e reparação de outros maquinários e equipamentos não classificados em subposições anteriores",
+      "kind": "conserto",
+      "note": "Use esta opção apenas se o objeto for o equipamento isolado e se nenhuma categoria específica de NBS prevalecer. Confira o tratamento das peças.",
+      "review": false
+    }
+  ],
+  "4222-7/02": [
+    {
+      "name": "Construção de sistema de irrigação por empreitada ou subempreitada",
+      "code": "070202",
+      "nbs": "1.0102.35.20",
+      "nbsName": "Serviços de construção de sistemas de irrigação",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Execução de obra de irrigação por administração",
+      "code": "070201",
+      "nbs": "1.0102.35.20",
+      "nbsName": "Serviços de construção de sistemas de irrigação",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4311-8/01": [
+    {
+      "name": "Demolição de edifício ou estrutura",
+      "code": "070401",
+      "nbs": "1.0103.10.00",
+      "nbsName": "Serviços de demolição",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4311-8/02": [
+    {
+      "name": "Preparação do terreno ou do canteiro dentro da empreitada",
+      "code": "070202",
+      "nbs": "1.0103.20.00",
+      "nbsName": "Serviços de preparação de terrenos e de canteiros de obras",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Limpeza independente do terreno ou imóvel",
+      "code": "071002",
+      "nbs": "1.1803.10.00",
+      "nbsName": "Serviços gerais de limpeza",
+      "kind": "limpeza",
+      "note": "Se o objeto for coleta e remoção de resíduos, consulte o enquadramento específico desse serviço.",
+      "review": false
+    }
+  ],
+  "4321-5/00": [
+    {
+      "name": "Instalação de fiação e componentes em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.11.00",
+      "nbsName": "Serviços de instalação de fiação elétrica e componentes",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Reparo predial de fiação e componentes elétricos com reinstalação",
+      "code": "070501",
+      "nbs": "1.0106.11.00",
+      "nbsName": "Serviços de instalação de fiação elétrica e componentes",
+      "kind": "obra",
+      "note": "Referência para reparo do edifício que inclui reinstalar fiação e componentes. Restrita à intervenção predial descrita.",
+      "review": false
+    }
+  ],
+  "4322-3/01": [
+    {
+      "name": "Instalação de tubulação de abastecimento em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.21.00",
+      "nbsName": "Serviços de instalação de tubulação para fornecimento de água",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Instalação de tubulação de escoamento em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.22.00",
+      "nbsName": "Serviços de instalação de tubulação para escoamento de água",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Instalação de gás em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.40.00",
+      "nbsName": "Serviços de instalação de gás",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4322-3/02": [
+    {
+      "name": "Instalação de ventilação ou ar condicionado central em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.32.00",
+      "nbsName": "Serviços de instalação de equipamentos de ventilação e de ar condicionado",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Manutenção periódica de equipamento de climatização comercial",
+      "code": "140101",
+      "nbs": "1.2001.60.00",
+      "nbsName": "Serviços de manutenção e reparação de maquinários e equipamentos de uso comercial",
+      "kind": "manutencao",
+      "note": "Restrito ao equipamento de uso comercial. Confira separadamente a manutenção da instalação predial.",
+      "review": false
+    }
+  ],
+  "4322-3/03": [
+    {
+      "name": "Instalação de sistema de alarme de incêndio em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.12.00",
+      "nbsName": "Serviços de instalação de alarmes contra incêndio",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Instalação de rede hidráulica de abastecimento para combate a incêndio em obra",
+      "code": "070202",
+      "nbs": "1.0106.21.00",
+      "nbsName": "Serviços de instalação de tubulação para fornecimento de água",
+      "kind": "obra",
+      "note": "Restrito à rede de tubulação de fornecimento de água.",
+      "review": false
+    }
+  ],
+  "4329-1/04": [
+    {
+      "name": "Instalação de iluminação elétrica em via pública como parte de obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0106.19.00",
+      "nbsName": "Serviços de instalação elétrica não classificados em subposições anteriores",
+      "kind": "obra",
+      "note": "Confirme a NBS específica se o objeto principal for a implantação de infraestrutura ou sinalização.",
+      "review": false
+    }
+  ],
+  "4329-1/99": [
+    {
+      "name": "Instalação em obra por empreitada sem subposição NBS específica",
+      "code": "070202",
+      "nbs": "1.0106.90.00",
+      "nbsName": "Serviços de instalação não classificados em subposições anteriores",
+      "kind": "obra",
+      "note": "Use o código residual após excluir as instalações especificamente classificadas.",
+      "review": false
+    }
+  ],
+  "4330-4/02": [
+    {
+      "name": "Instalação de portas ou janelas de madeira ou metal em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0107.50.00",
+      "nbsName": "Serviços de carpintaria e de serralharia",
+      "kind": "obra",
+      "note": "Restrito a trabalho de carpintaria ou serralheria. Vidraçaria e outros acabamentos podem ter NBS diferente.",
+      "review": false
+    },
+    {
+      "name": "Vidraçaria em instalação de portas ou janelas em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0107.10.00",
+      "nbsName": "Serviços de vidraçaria",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Conserto pontual de mola hidráulica de porta, como equipamento isolado",
+      "code": "140101",
+      "nbs": "1.2001.89.00",
+      "nbsName": "Serviços de manutenção e reparação de outros maquinários e equipamentos não classificados em subposições anteriores",
+      "kind": "conserto",
+      "note": "Use para o reparo isolado da mola hidráulica, quando não houver categoria mais específica para o equipamento. O Anexo VIII relaciona essa NBS ao item 14.01. Reparação do imóvel e fornecimento de peças têm tratamento próprio.",
+      "review": false
+    },
+    {
+      "name": "Instalação avulsa de vidros com material fornecido pelo tomador",
+      "code": "070601",
+      "nbs": "1.0107.10.00",
+      "nbsName": "Serviços de vidraçaria",
+      "kind": "instalacao",
+      "note": "A NBS indicada é para vidraçaria. Para divisórias sem vidraçaria, escolha Outro serviço para confirmar a NBS.",
+      "review": false
+    }
+  ],
+  "4330-4/03": [
+    {
+      "name": "Aplicação de gesso ou estuque em obra por empreitada",
+      "code": "070202",
+      "nbs": "1.0107.20.00",
+      "nbsName": "Serviços de gesso e de estuque",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4330-4/04": [
+    {
+      "name": "Pintura em construção por empreitada",
+      "code": "070202",
+      "nbs": "1.0107.30.00",
+      "nbsName": "Serviços de pintura",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Repintura de edifício existente para conservação ou reforma",
+      "code": "070501",
+      "nbs": "1.0107.30.00",
+      "nbsName": "Serviços de pintura",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4330-4/05": [
+    {
+      "name": "Revestimento de pisos ou paredes em construção por empreitada",
+      "code": "070202",
+      "nbs": "1.0107.40.00",
+      "nbsName": "Serviços de revestimento de pisos e de paredes",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Revestimento de pisos ou paredes em reforma de imóvel",
+      "code": "070501",
+      "nbs": "1.0107.40.00",
+      "nbsName": "Serviços de revestimento de pisos e de paredes",
+      "kind": "obra",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Colocação avulsa de revestimento de paredes com material fornecido pelo tomador",
+      "code": "070601",
+      "nbs": "1.0107.40.00",
+      "nbsName": "Serviços de revestimento de pisos e de paredes",
+      "kind": "instalacao",
+      "note": "",
+      "review": false
+    }
+  ],
+  "4330-4/99": [
+    {
+      "name": "Acabamento de construção por empreitada sem subposição NBS específica",
+      "code": "070202",
+      "nbs": "1.0107.90.00",
+      "nbsName": "Serviços de acabamento não classificados em subposições anteriores",
+      "kind": "obra",
+      "note": "Descreva a intervenção e descarte as categorias específicas antes de usar a NBS residual.",
+      "review": false
+    }
+  ],
+  "4399-1/01": [
+    {
+      "name": "Execução por administração de construção residencial de um ou dois pavimentos",
+      "code": "070201",
+      "nbs": "1.0101.11.00",
+      "nbsName": "Serviços de construção de edificações residenciais de um e dois pavimentos",
+      "kind": "obra",
+      "note": "Use quando a contratada executa a construção. Para acompanhamento técnico sem execução, escolha a opção de fiscalização.",
+      "review": false
+    },
+    {
+      "name": "Execução por administração de construção residencial com mais de dois pavimentos",
+      "code": "070201",
+      "nbs": "1.0101.12.00",
+      "nbsName": "Serviços de construção de edificações residenciais com mais de dois pavimentos",
+      "kind": "obra",
+      "note": "NBS vinculada ao porte da edificação.",
+      "review": false
+    },
+    {
+      "name": "Execução por administração de construção de edifício comercial",
+      "code": "070201",
+      "nbs": "1.0101.22.00",
+      "nbsName": "Serviços de construção de edificações comerciais",
+      "kind": "obra",
+      "note": "NBS vinculada ao uso comercial do edifício.",
+      "review": false
+    },
+    {
+      "name": "Execução por administração de construção de edifício industrial",
+      "code": "070201",
+      "nbs": "1.0101.21.00",
+      "nbsName": "Serviços de construção de edificações industriais",
+      "kind": "obra",
+      "note": "NBS vinculada ao uso industrial do edifício.",
+      "review": false
+    },
+    {
+      "name": "Acompanhamento e fiscalização de execução de projeto arquitetônico ou urbanístico",
+      "code": "071901",
+      "nbs": "1.1402.15.00",
+      "nbsName": "Serviços de arquitetura relativos ao acompanhamento e fiscalização da execução de projetos arquitetônicos e urbanísticos",
+      "kind": "profissional",
+      "note": "Para trabalho de arquitetura ou urbanismo sem execução da obra. A NBS é específica para esse objeto.",
+      "review": false
+    },
+    {
+      "name": "Fiscalização técnica de obra de engenharia dentro do gerenciamento da construção",
+      "code": "071901",
+      "nbs": "1.1403.30.00",
+      "nbsName": "Serviços de gerenciamento de projetos de construção",
+      "kind": "profissional",
+      "note": "Use quando o objeto é o acompanhamento e a fiscalização da execução, integrados ao gerenciamento da construção. O Anexo VIII relaciona essa NBS ao item 07.19. Há opção própria para fiscalização de arquitetura ou urbanismo.",
+      "review": false
+    },
+    {
+      "name": "Gerenciamento técnico de projeto de construção sem execução ou fiscalização de obra",
+      "code": "070101",
+      "nbs": "1.1403.30.00",
+      "nbsName": "Serviços de gerenciamento de projetos de construção",
+      "kind": "profissional",
+      "note": "Restrito a serviço técnico de engenharia. Confirme o escopo antes de aplicar o subitem.",
+      "review": false
+    }
+  ],
+  "4399-1/02": [
+    {
+      "name": "Cessão de andaimes com montagem e desmontagem",
+      "code": "030501",
+      "nbs": "1.0105.70.00",
+      "nbsName": "Serviços de andaimes",
+      "kind": "andaime",
+      "note": "Contrato de cessão com montagem e desmontagem, distinto da locação pura e da empreitada de montagem.",
+      "review": false
+    },
+    {
+      "name": "Locação pura de andaimes, sem montagem ou desmontagem",
+      "code": "—",
+      "nbs": "1.1101.30.00",
+      "nbsName": "Arrendamento mercantil operacional ou locação de máquinas e equipamentos de construção, sem operador",
+      "kind": "locacao",
+      "note": "A NBS identifica a locação. A locação pura de bem móvel está fora do ISS, conforme Súmula Vinculante 31.",
+      "review": false
+    },
+    {
+      "name": "Montagem e desmontagem de andaimes contratada como serviço de obra",
+      "code": "070202",
+      "nbs": "1.0105.70.00",
+      "nbsName": "Serviços de andaimes",
+      "kind": "obra",
+      "note": "Restrito à montagem por empreitada. Se a operação for cessão da estrutura, escolha a opção de cessão.",
+      "review": false
+    }
+  ],
+  "4399-1/04": [
+    {
+      "name": "Içamento avulso, carga ou descarga de materiais em canteiro",
+      "code": "110402",
+      "nbs": "1.0601.90.00",
+      "nbsName": "Serviços de manuseio de cargas não classificados em subposições anteriores",
+      "kind": "operacao",
+      "note": "Para manuseio de carga contratado separadamente, quando não houver NBS específica para a carga. Se o içamento integrar uma etapa de execução de obra, use o código da etapa efetiva.",
+      "review": false
+    },
+    {
+      "name": "Içamento e colocação de elementos de estrutura de aço como parte da montagem por empreitada",
+      "code": "070202",
+      "nbs": "1.0105.50.00",
+      "nbsName": "Serviços de montagem de estruturas de aço",
+      "kind": "obra",
+      "note": "A contratada deve assumir a montagem da estrutura. Se o objeto for apenas carga ou descarga, use a opção de manuseio avulso.",
+      "review": false
+    },
+    {
+      "name": "Locação pura de equipamento de construção sem operador",
+      "code": "—",
+      "nbs": "1.1101.30.00",
+      "nbsName": "Arrendamento mercantil operacional ou locação de máquinas e equipamentos de construção, sem operador",
+      "kind": "locacao",
+      "note": "A NBS identifica a locação. Confira separadamente qualquer operação contratada com mão de obra.",
+      "review": false
+    }
+  ],
+  "4399-1/99": [
+    {
+      "name": "Serviço especializado de construção por empreitada sem subposição específica",
+      "code": "070202",
+      "nbs": "1.0105.90.00",
+      "nbsName": "Serviços especializados de construção não classificados em subposições anteriores",
+      "kind": "obra",
+      "note": "Use somente após excluir serviços como fundação, alvenaria, concretagem e impermeabilização.",
+      "review": false
+    }
+  ],
+  "8121-4/00": [
+    {
+      "name": "Limpeza geral de prédio ou domicílio por empresa prestadora",
+      "code": "071002",
+      "nbs": "1.1803.10.00",
+      "nbsName": "Serviços gerais de limpeza",
+      "kind": "limpeza",
+      "note": "",
+      "review": false
+    }
+  ],
+  "8129-0/00": [
+    {
+      "name": "Varrição e remoção de resíduos de vias públicas",
+      "code": "070901",
+      "nbs": "1.2406.10.00",
+      "nbsName": "Serviços de varrição de vias e áreas públicas",
+      "kind": "limpeza",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Limpeza especializada de janelas",
+      "code": "071002",
+      "nbs": "1.1803.22.00",
+      "nbsName": "Serviços de limpeza de janelas",
+      "kind": "limpeza",
+      "note": "",
+      "review": false
+    },
+    {
+      "name": "Desinfecção ou controle de pragas",
+      "code": "071301",
+      "nbs": "1.1803.21.00",
+      "nbsName": "Serviços de desinfecção e extermínio de pragas",
+      "kind": "limpeza",
+      "note": "",
+      "review": false
+    }
+  ],
+  "9609-2/99": [
+    {
+      "name": "Consultoria técnica de organização pessoal com diagnóstico e plano",
+      "code": "170101",
+      "nbs": "1.1410.90.00",
+      "nbsName": "Serviços de consultoria técnica e científica não classificados em subposições anteriores",
+      "kind": "profissional",
+      "note": "Use quando a entrega contratada é diagnóstico, metodologia e plano técnico de organização pessoal. O Anexo VIII relaciona essa NBS ao item 17.01. Arrumação física, faxina e outros serviços pessoais exigem enquadramento próprio.",
+      "review": false
+    }
+  ],
+  "9700-5/00": [
+    {
+      "name": "Serviço doméstico prestado em relação de emprego",
+      "code": "—",
+      "nbs": "1.2605.00.00",
+      "nbsName": "Serviços domésticos",
+      "kind": "domestico",
+      "note": "O código NBS é uma referência de classificação. Remuneração do vínculo doméstico não é operação para NFS-e. Verifique registro e eSocial Doméstico.",
+      "review": false
+    },
+    {
+      "name": "Limpeza residencial contratada de empresa prestadora",
+      "code": "071002",
+      "nbs": "1.1803.10.00",
+      "nbsName": "Serviços gerais de limpeza",
+      "kind": "limpeza",
+      "note": "Use apenas para prestação empresarial. Confira se o cadastro do prestador corresponde à atividade de limpeza.",
+      "review": false
+    }
+  ]
+};
+const form = document.querySelector('#consulta');
+const activity = document.querySelector('#atividade');
+const alerts = document.querySelector('#avisos');
+const result = document.querySelector('#resultado');
+const summary = document.querySelector('#dados');
+const pendingContract = document.querySelector('#contrato-pendente');
+const service = document.querySelector('#enquadramento');
+const fields = [...form.querySelectorAll('[required]')];
+const messages = {
+  atividade: 'Selecione a atividade (CNAE).',
+  enquadramento: 'Escolha o serviço efetivamente prestado. Se ele não estiver na lista, selecione Outro serviço.',
+  servico: 'Descreva o serviço que foi realizado.',
+  regime: 'Selecione o regime tributário do prestador.',
+  tomador: 'Selecione o tipo de tomador.',
+  prestador: 'Informe o município e a UF do prestador.',
+  local: 'Informe o município e a UF onde o serviço foi realizado.',
+  contratacao: 'Selecione a forma de contratação. Se tiver dúvida, escolha a opção de confirmar no contrato.'
+};
+const cityPattern = /^[\p{L}][\p{L}\s.'’\-]*\s*[/\-]\s*(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)$/iu;
+let submitted = false;
+for (const [code, name] of activities) {
+  activity.add(new Option(code + ' · ' + name, code));
+}
+const $ = id => document.getElementById(id);
+const source = {
+  nfse: ['Portal Nacional da NFS-e · Anexo B, versão 1.01 de 22/01/2026', 'https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_b-nbs2-lista_servico_nacional-snnfse-v1-01-20260122.xlsx'],
+  rtc: ['Portal Nacional da NFS-e · Anexo VIII v1.02.00, correlação técnica em desenvolvimento', 'https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/rtc'],
+  nbs: ['MDIC · NBS 2.0 e notas explicativas', 'https://www.gov.br/mdic/pt-br/assuntos/sdic/comercio-e-servicos/nbs-nomenclatura-brasileira-de-servicos/painel-de-codigos-nbs'],
+  iss: ['LC 116/2003 · artigos 3º, 6º, 8º e 8º-A e lista de serviços', 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp116.htm'],
+  simples: ['LC 123/2006 · artigos 18 e 21, § 4º', 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm'],
+  inss: ['IN RFB 2.110/2022 · artigos 110 a 114, 130 e 166 a 167', 'https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=126687'],
+  reparo: ['Receita Federal · Solução de Consulta Cosit 44/2024 sobre instalação e reparação', 'https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=136879'],
+  cprb: ['Receita Federal · retenção de 3,5% na CPRB', 'https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/perguntas-frequentes/sped/efd-reinf/efdr/2-eventos-da-efd-reinf/2-7-7-caso-uma-empresa'],
+  ir: ['Decreto 9.580/2018 · artigos 714 e 716', 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/decreto/d9580.htm'],
+  irSimples: ['IN RFB 765/2007 · IRRF no Simples', 'https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=15713'],
+  csrf: ['Lei 10.833/2003 · artigos 30 a 32', 'https://www.planalto.gov.br/ccivil_03/leis/2003/l10.833.htm'],
+  csrfIN: ['IN SRF 459/2004 · definição de manutenção e dispensas', 'https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=15365&visao=compilado'],
+  public: ['Receita Federal · IN RFB 1.234/2012 e retenções de entes públicos', 'https://normas.receita.fazenda.gov.br/sijut2consulta/anexoOutros.action?idArquivoBinario=73385'],
+  cgsnIss: ['Resolução CGSN 140/2018 · art. 27, retenção do ISS no Simples', 'https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=92278'],
+  altamira: ['Prefeitura de Altamira · Código Tributário Municipal', 'https://altamira.pa.gov.br/lei-no-3-189-2013-de-27-de-dezembro-de-2013-dispoe-sobre-o-sistema-tributario-do-municipio-de-altamira-estado-do-para-e-da-outras-providencias/'],
+  domestico: ['LC 150/2015 · artigo 1º, contrato de trabalho doméstico', 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm']
+};
+const unclassified = {name:'Outro serviço / preciso confirmar', code:'', nbs:'', kind:'pendente', note:'Identifique o objeto do contrato e consulte o município e a tabela NBS antes de preencher os códigos.'};
+const issAtSite = new Set(['0305','0702','0704','0705','0709','0710','0719','1104']);
+const statutoryWithholding = new Set(['0305','0702','0704','0705','0709','0710','0719']);
+const inssKinds = new Set(['obra','operacao','limpeza','manutencao','conserto','profissional','instalacao']);
+const selected = () => matrix[activity.value]?.[service.value] ?? unclassified;
+const isSimples = () => ['Simples Nacional','MEI'].includes($('regime').value);
+
+function populateServices() {
+  const variants = matrix[activity.value];
+  service.replaceChildren(new Option(variants ? 'Selecione o serviço' : 'Escolha primeiro o CNAE',''));
+  service.disabled = !variants;
+  if (!variants) {
+    service.removeAttribute('aria-invalid');
+    $('enquadramento-erro').textContent = '';
+    return;
+  }
+  variants.forEach((entry, index) => service.add(new Option(entry.name, String(index))));
+  service.add(new Option(unclassified.name,'outro'));
+}
+activity.addEventListener('change', () => {
+  populateServices();
+  updateQuestions();
+  if (submitted) validate();
+});
+
+function updateQuestions() {
+  const relevant = inssKinds.has(selected().kind) && $('tomador').value !== 'Pessoa física';
+  $('previdencia').hidden = !relevant;
+  $('anexo-box').hidden = $('regime').value !== 'Simples Nacional';
+}
+
+function addField(list, name, value) {
+  const label = document.createElement('dt');
+  const detail = document.createElement('dd');
+  label.textContent = name;
+  detail.textContent = value;
+  list.append(label, detail);
+}
+const formatCode = code => code.match(/../g).join('.');
+const cityKey = value => value.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/\s+/g,'');
+
+function issResult(entry, person) {
+  const subitem = entry.code.slice(0,4);
+  const municipality = $(issAtSite.has(subitem) ? 'local' : 'prestador').value.trim();
+  const place = subitem === '0305'
+    ? 'Confirme o local de instalação da estrutura. '
+    : 'Município de referência: ' + municipality + '. ';
+  const retention = statutoryWithholding.has(subitem) && !person
+    ? 'A LC 116 prevê responsabilidade do tomador PJ para este subitem. Confirme a retenção com o município competente e a situação do prestador. '
+    : 'Confira na legislação municipal quem é o responsável e se há retenção. ';
+  let rate = 'Consulte a alíquota municipal do subitem para a competência da nota.';
+  if ($('regime').value === 'MEI') rate = 'Em regra, sem retenção quando o ISS é recolhido em valor fixo mensal pelo Simples. Confirme o enquadramento no SIMEI.';
+  else if (isSimples()) rate = 'Se houver retenção, confirme a alíquota efetiva de ISS do mês anterior. A LC 123 prevê 2% no mês de início da atividade e 5% na falta de informação da alíquota, nas hipóteses legais.';
+  const altamira = ['altamira/pa','altamira-pa'].includes(cityKey(municipality));
+  const localReference = altamira && !isSimples() && ['Lucro Presumido','Lucro Real'].includes($('regime').value)
+    ? ' Referência para Altamira: 5% na lista da Lei Municipal 3.189/2013 para o serviço correspondente. Confirme no emissor a vigência, o código local e eventuais exceções.'
+    : '';
+  return place + retention + rate + localReference;
+}
+
+function inssResult(entry, contract, person) {
+  if (person) return 'A regra de retenção previdenciária entre empresas não se aplica ao tomador pessoa física. Em obra, confira separadamente as obrigações do dono da obra.';
+  if ($('regime').value === 'MEI') return 'Confira as regras próprias da contratação de MEI. Serviços de hidráulica, eletricidade, pintura, alvenaria e carpintaria podem gerar contribuição a cargo da contratante, distinta da retenção na nota.';
+  if (!inssKinds.has(entry.kind)) return 'Confirme o escopo contratual e se há mão de obra ou serviço enquadrado nos arts. 111 e 112 da IN RFB 2.110/2022.';
+  if ($('regime').value === 'Simples Nacional' && ['Anexo III','Anexo V','Outro anexo'].includes($('anexo').value)) {
+    return 'Em regra, sem retenção do art. 110 para serviços tributados fora do Anexo IV. Verifique a elegibilidade se houver cessão de mão de obra.';
+  }
+  if (entry.kind === 'obra' && contract === 'Empreitada total') return 'Empreitada total de construção civil tem regras próprias de responsabilidade solidária. Confira se o contrato caracteriza empreitada total e eventual retenção para elidir a responsabilidade.';
+  if (['conserto','manutencao','instalacao'].includes(entry.kind) && contract === 'Serviço contratado por resultado') return 'Em regra, sem retenção previdenciária nesse cenário quando não há equipe à disposição do contratante nem outra hipótese legal. Confirme as condições do contrato.';
+  if (entry.kind === 'profissional') return 'A classificação como serviço técnico por si só não define retenção previdenciária. Verifique se a execução se enquadra nos arts. 111 a 114 da IN RFB 2.110/2022.';
+  const potential = {
+    obra: 'Confira se o serviço de construção civil executado sob empreitada parcial, subempreitada ou cessão se sujeita à retenção e se há exceções do art. 130.',
+    operacao: 'Confira se houve cessão de operadores ou outra hipótese previdenciária do contrato de obra.',
+    limpeza: 'Confira se a limpeza se enquadra como cessão ou empreitada do art. 111 da IN RFB 2.110/2022.',
+    manutencao: 'Confira se a manutenção é indispensável ao funcionamento regular e há equipe à disposição da contratante.',
+    instalacao: 'Confira se a instalação está abrangida pelo contrato de construção ou se há cessão de equipe. Verifique as exceções do art. 130.',
+    conserto: 'Confirme se houve apenas reparo pontual ou manutenção com equipe à disposição.'
+  };
+  let rate = 'Se houver retenção, a regra geral é 11%. Confirme eventual CPRB para aplicar 3,5% quando a hipótese legal abranger o contrato.';
+  if ($('cprb').value === 'Não') rate = 'Se houver retenção, a referência geral é 11%. Confira a base, dispensas e eventuais adicionais legais.';
+  if ($('cprb').value === 'Sim, comprovada') rate = 'Se houver retenção e a hipótese legal da CPRB abranger o contrato, a referência em 2026 é 3,5%. Nos demais casos sujeitos à retenção, confira a regra geral de 11%.';
+  const annex = $('regime').value === 'Simples Nacional' && $('anexo').value !== 'Anexo IV'
+    ? 'Confirme se a receita é do Anexo IV antes de destacar INSS. ' : '';
+  return annex + potential[entry.kind] + ' ' + rate;
+}
+
+function federalResult(entry, person, publicBody) {
+  if (publicBody) return [
+    isSimples() ? 'Confira a dispensa do Simples, os documentos exigidos e as regras do ente pagador.' : 'Identifique o ente pagador e o objeto. Nas hipóteses da IN RFB 1.234/2012, confira o Anexo I. A alíquota pode variar, por exemplo, entre 1,2% e 4,8% para os enquadramentos usuais de serviços.',
+    'Pagamentos federais e subnacionais têm regras distintas. Confirme o enquadramento do órgão, eventual convênio, dispensa e documentação antes de destacar.'
+  ];
+  if (person) return ['A regra de retenção entre pessoas jurídicas não se aplica.', 'A regra de retenção entre pessoas jurídicas não se aplica.'];
+  if (isSimples()) return ['Em regra, dispensado sobre a receita própria do prestador optante. Confirme a situação do Simples.', 'Em regra, dispensadas sobre a receita própria do prestador optante. Confirme a situação do Simples.'];
+  const cleaning = entry.kind === 'limpeza';
+  const professional = entry.kind === 'profissional';
+  const ir = cleaning ? 'Em regra, 1% quando o serviço se enquadra como limpeza ou conservação de imóveis. Confirme a hipótese e eventuais dispensas.'
+    : professional ? 'Em regra, 1,5% quando o objeto é serviço profissional listado no art. 714. Confirme as exclusões para execução de obra.'
+    : 'Confira se o objeto inclui serviço profissional (1,5%) ou limpeza, conservação ou locação de mão de obra (1%) nas hipóteses legais. O CNAE sozinho não determina o destaque.';
+  const rates = 'CSLL 1%, Cofins 3% e PIS/Pasep 0,65%, total de 4,65% quando aplicável. Confira as dispensas legais e o regime do tomador.';
+  const contributions = cleaning || professional || entry.kind === 'manutencao' ? rates
+    : entry.kind === 'conserto' ? 'Mero conserto isolado fica fora da hipótese de manutenção da IN SRF 459/2004. Confira se existe outra hipótese de retenção.'
+    : 'Confira se o objeto inclui limpeza, conservação, manutenção, locação de mão de obra ou serviço profissional. ' + rates;
+  return [ir, contributions];
+}
+
+function renderFiscal() {
+  const entry = selected();
+  const contract = $('contratacao').value;
+  const person = $('tomador').value === 'Pessoa física';
+  const publicBody = $('tomador').value === 'Órgão ou entidade pública';
+  const taxes = $('tributos');
+  summary.replaceChildren();
+  taxes.replaceChildren();
+  pendingContract.hidden = contract !== 'Preciso confirmar no contrato';
+  const noInvoice = entry.kind === 'locacao' || entry.kind === 'domestico';
+  const hasCode = entry.code && entry.code !== '—';
+  let conflict = '';
+  if (['070201','070202'].includes(entry.code) && contract !== 'Preciso confirmar no contrato') {
+    const matches = entry.code === '070201' ? contract === 'Execução por administração' :
+      ['Empreitada total','Empreitada parcial ou subempreitada'].includes(contract);
+    if (!matches) conflict = 'O serviço selecionado e a forma de contratação estão divergentes. Confira os dois campos antes de usar os códigos.';
+  }
+  $('situacao').textContent = conflict || (noInvoice ? 'Operação fora da consulta de NFS-e de serviços.' :
+    entry.review ? 'Correlação sugerida para este serviço. Confirme a classificação com o emissor antes de usar os códigos.' :
+    hasCode && entry.nbs ? 'Códigos de referência para o cenário selecionado. Confira as condições do contrato e os campos de retenção antes de emitir.' :
+    'Classificação pendente. Veja abaixo quais códigos precisam de confirmação.');
+  addField(summary,'Serviço selecionado',entry.name);
+  if (entry.note) addField(summary,'Condição de uso',entry.note);
+  addField(summary,'Código de tributação nacional',conflict ? 'Pendente de conciliação com o contrato' :
+    hasCode ? formatCode(entry.code) + ' (' + entry.code + ')' : noInvoice ? 'Não se aplica ao cenário' : 'A confirmar pelo serviço');
+  addField(summary,'NBS',entry.nbs ? entry.nbs + ' · ' + entry.nbsName : noInvoice ? 'Não se aplica à NFS-e' : 'A confirmar pelo objeto do contrato');
+  addField(summary,'Descrição informada', $('servico').value.trim());
+  renderWithholdings(entry, hasCode && !conflict);
+  if (hasCode && !conflict) {
+    const [ir, contributions] = federalResult(entry, person, publicBody);
+    addField(summary,'Código municipal','Use o código correspondente no emissor do município, quando exigido.');
+    addField(taxes,'ISS e ISS retido',issResult(entry, person));
+    addField(taxes,'INSS retido',inssResult(entry, contract, person));
+    addField(taxes,'IRRF',ir);
+    addField(taxes,'CSLL, Cofins e PIS/Pasep',contributions);
+  } else {
+    addField(taxes,'Destaque na NFS-e',noInvoice ? 'Não se aplica ao cenário selecionado. Obrigações contratuais e trabalhistas são analisadas à parte.' :
+      'Confirme a classificação nacional e o contrato para avaliar o destaque.');
+  }
+  const keys = ['nfse','nbs','iss'];
+  if (['140101','071901','170101'].includes(entry.code)) keys.push('rtc');
+  if (hasCode) keys.push('simples','cgsnIss','inss','cprb','ir','irSimples','csrf','csrfIN','public','altamira');
+  if (['conserto','manutencao','instalacao'].includes(entry.kind)) keys.push('reparo');
+  if (entry.kind === 'domestico') keys.push('domestico');
+  if (entry.kind === 'locacao') keys.push('locacao');
+  $('fontes').replaceChildren(...keys.map(key => {
+    const [title, url] = source[key];
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.textContent = title;
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    item.append(link);
+    return item;
+  }));
+}
+
+source.locacao = ['STF · Súmula Vinculante 31, locação de bens móveis', 'https://portal.stf.jus.br/jurisprudencia/sumariosumulas.asp?base=26&sumula=1184'];
+for (const [code, name] of activities) {
+  const section = document.createElement('details');
+  const headline = document.createElement('summary');
+  headline.textContent = code + ' · ' + name;
+  section.append(headline);
+  matrix[code].forEach((entry, index) => {
+    const row = document.createElement('div');
+    row.className = 'linha';
+    const label = document.createElement('span');
+    label.textContent = entry.name + ' · ' + (entry.code && entry.code !== '—' ? formatCode(entry.code) : entry.code ? 'NFS-e não aplicável' : 'Código a confirmar') +
+      (entry.nbs ? ' · NBS ' + entry.nbs + (entry.review ? ' · Confirmar correlação' : '') : entry.code === '—' ? '' : ' · NBS a confirmar');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = 'Selecionar';
+    button.setAttribute('aria-label', 'Selecionar ' + entry.name);
+    button.addEventListener('click', () => {
+      activity.value = code;
+      populateServices();
+      service.value = String(index);
+      result.hidden = true;
+      updateQuestions();
+      if (submitted) validate();
+      $('servico').focus();
+    });
+    row.append(label, button);
+    section.append(row);
+  });
+  $('tabela').append(section);
+}
+
+function validate() {
+  const missing = [];
+  for (const field of fields) {
+    if (field.disabled) continue;
+    const value = field.value.trim();
+    const invalidCity = field instanceof HTMLInputElement && value && !cityPattern.test(value);
+    const message = value ? (invalidCity ? 'Use o formato Município/UF, como Altamira/PA.' : '') : messages[field.id];
+    document.getElementById(field.id + '-erro').textContent = message;
+    if (message) {
+      field.setAttribute('aria-invalid', 'true');
+      missing.push(field);
+    } else {
+      field.removeAttribute('aria-invalid');
+    }
+  }
+  alerts.replaceChildren();
+  if (missing.length) {
+    const heading = document.createElement('strong');
+    heading.textContent = missing.length === 1 ? 'Revise este campo para consultar.' : 'Revise estes ' + missing.length + ' campos para consultar.';
+    const list = document.createElement('ul');
+    for (const field of missing) {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = '#' + field.id;
+      link.textContent = field.labels[0].textContent;
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        field.focus();
+      });
+      item.append(link);
+      list.append(item);
+    }
+    alerts.append(heading, list);
+  }
+  return missing;
+}
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  submitted = true;
+  const missing = validate();
+  if (missing.length) {
+    result.hidden = true;
+    missing[0].focus();
+    return;
+  }
+  updateAnnex();
+  for (const [id,max,message] of currencyFields) {
+    if (id === 'valor-servico' || !$('simples-inputs').hidden) formatCurrency($(id),max,message);
+  }
+  renderFiscal();
+  renderSimples();
+  renderRtc(selected());
+  result.hidden = false;
+  document.querySelector('#resultado-titulo').focus();
+});
+form.addEventListener('input', () => {
+  result.hidden = true;
+  updateQuestions();
+  if (submitted) validate();
+});
+form.addEventListener('reset', () => {
+  submitted = false;
+  result.hidden = true;
+  alerts.replaceChildren();
+  for (const field of fields) {
+    field.removeAttribute('aria-invalid');
+    document.getElementById(field.id + '-erro').textContent = '';
+  }
+  queueMicrotask(() => { populateServices(); updateQuestions(); activity.focus(); });
+});
+</script>
+<script>
+const themeButton = document.querySelector('#theme');
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeButton.textContent = theme === 'light' ? 'Modo escuro' : 'Modo claro';
+}
+try {
+  setTheme(localStorage.getItem('mf-fiscal-theme') === 'light' ? 'light' : 'dark');
+} catch {
+  setTheme('dark');
+}
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  setTheme(theme);
+  try { localStorage.setItem('mf-fiscal-theme', theme); } catch {}
+});
+const fiscalLinks = [...document.querySelectorAll('.sidebar nav a')];
+function updateNavigation() {
+  const active = fiscalLinks.find(link => link.hash === location.hash) || fiscalLinks[0];
+  if (active.hash === '#matriz-fiscal') document.querySelector('#matriz').open = true;
+  document.querySelector('#workspace-title').textContent = active.textContent.replace(/^[▤▦%]\s*/, '');
+  for (const link of fiscalLinks) {
+    if (link === active) link.setAttribute('aria-current','location');
+    else link.removeAttribute('aria-current');
+  }
+}
+window.addEventListener('hashchange', updateNavigation);
+document.querySelector('#tabela').addEventListener('click', event => {
+  if (event.target.closest('button') && location.hash === '#matriz-fiscal') {
+    history.replaceState(null, '', '#consulta-nfse');
+    updateNavigation();
+  }
+});
+updateNavigation();
+const progressFields = [...document.querySelectorAll('#consulta [required]')];
+const progressBar = document.querySelector('#progress');
+const progressLabel = document.querySelector('#progress-label');
+function updateProgress() {
+  const complete = progressFields.filter(field => {
+    const value = field.value.trim();
+    return !field.disabled && value && (!(field instanceof HTMLInputElement) || cityPattern.test(value));
+  }).length;
+  progressBar.max = progressFields.length;
+  progressBar.value = complete;
+  progressLabel.textContent = complete + ' de ' + progressFields.length + ' campos preenchidos';
+}
+const consultationForm = document.querySelector('#consulta');
+consultationForm.addEventListener('input', updateProgress);
+consultationForm.addEventListener('change', updateProgress);
+consultationForm.addEventListener('reset', () => queueMicrotask(updateProgress));
+document.querySelector('#tabela').addEventListener('click', updateProgress);
+updateProgress();
+</script>
+<script>
+const simpleTables = {
+  III: {
+    rates: [6,11.2,13.5,16,21,33],
+    deductions: [0,9360,17640,35640,125640,648000],
+    shares: [[4,3.5,12.82,2.78,43.4,33.5],[4,3.5,14.05,3.05,43.4,32],[4,3.5,13.64,2.96,43.4,32.5],[4,3.5,13.64,2.96,43.4,32.5],[4,3.5,12.82,2.78,43.4,33.5],[35,15,16.03,3.47,30.5,0]],
+    capped: [6.02,5.26,19.28,4.18,65.26]
+  },
+  IV: {
+    rates: [4.5,9,10.2,14,22,33],
+    deductions: [0,8100,12420,39780,183780,828000],
+    shares: [[18.8,15.2,17.67,3.83,0,44.5],[19.8,15.2,20.55,4.45,0,40],[20.8,15.2,19.73,4.27,0,40],[17.8,19.2,18.9,4.1,0,40],[18.8,19.2,18.08,3.92,0,40],[53.5,21.5,20.55,4.45,0,0]],
+    capped: [31.33,32,30.13,6.54,0]
+  },
+  V: {
+    rates: [15.5,18,19.5,20.5,23,30.5],
+    deductions: [0,4500,9900,17100,62100,540000],
+    shares: [[25,15,14.1,3.05,28.85,14],[23,15,14.1,3.05,27.85,17],[24,15,14.92,3.23,23.85,19],[21,15,15.74,3.41,23.85,21],[23,12.5,14.1,3.05,23.85,23.5],[35,15.5,16.44,3.56,29.5,0]]
+  }
+};
+const bounds = [180000,360000,720000,1800000,3600000,4800000];
+const money = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+const rateFormat = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:4,minimumFractionDigits:2});
+const percent = value => rateFormat.format(value) + '%';
+
+function brazilianNumber(value) {
+  const clean = value.trim().replace(/^R\$\s*/,'');
+  if (!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(clean)) return NaN;
+  return Number(clean.replaceAll('.','').replace(',','.'));
+}
+
+function currencyNumber(value) {
+  const clean = value.trim().replace(/^R\$\s*/,'');
+  const brazilian = brazilianNumber(clean);
+  if (Number.isFinite(brazilian)) return brazilian;
+  if (/^\d+\.\d{1,2}$/.test(clean)) return Number(clean);
+  return NaN;
+}
+
+const currencyFields = [
+  ['rbt12', 4800000, 'Informe uma receita maior que zero e até R$ 4.800.000,00 para simular o Simples.'],
+  ['valor-servico', Infinity, 'Informe um valor maior que zero no formato 1.500,00.']
+];
+
+function formatCurrency(field, max, message) {
+  const value = currencyNumber(field.value);
+  const valid = value > 0 && value <= max;
+  const error = field.value.trim() && !valid ? message : '';
+  $(field.id + '-erro').textContent = error;
+  if (error) field.setAttribute('aria-invalid','true');
+  else field.removeAttribute('aria-invalid');
+  if (valid) field.value = money.format(value);
+}
+
+function renderLiveRates(annex) {
+  const output = $('aliquotas-live');
+  const table = simpleTables[annex];
+  if (!table) {
+    output.textContent = 'As alíquotas aparecem assim que o anexo for identificado.';
+    return;
+  }
+  const gross = currencyNumber($('rbt12').value);
+  const band = bounds.findIndex(limit => gross <= limit);
+  if (!(gross > 0) || band < 0) {
+    output.textContent = 'Alíquotas nominais do Anexo ' + annex + ', da 1ª à 6ª faixa: ' + table.rates.map(percent).join(' · ') + '. Informe o RBT12 para ver a sua faixa.';
+    return;
+  }
+  if (band === 5) {
+    output.textContent = 'Anexo ' + annex + ', 6ª faixa: alíquota nominal de ' + percent(table.rates[band]) + '. Confira o sublimite e a apuração do ISS no PGDAS-D.';
+    return;
+  }
+  const effective = (gross * table.rates[band] / 100 - table.deductions[band]) / gross * 100;
+  output.textContent = 'Anexo ' + annex + ', faixa ' + (band + 1) + ': alíquota nominal de ' + percent(table.rates[band]) + ' e efetiva estimada de ' + percent(effective) + '.';
+}
+
+function annexFor(entry) {
+  const contract = $('contratacao').value;
+  const labor = contract === 'Disponibilização de mão de obra ao tomador';
+  const outcome = contract === 'Serviço contratado por resultado';
+  const hasWorkContract = ['Empreitada total','Empreitada parcial ou subempreitada','Execução por administração'].includes(contract);
+  if (entry.kind === 'limpeza') return ['IV','Limpeza e conservação se enquadram no Anexo IV, conforme art. 18, § 5º-C, VI.'];
+  if (['070501','070502'].includes(entry.code)) {
+    const scope = $('escopo-simples').value;
+    if (scope === 'obra' && hasWorkContract) return ['IV','Serviço contratado como parte da execução de obra de engenharia, conforme art. 18, § 5º-C, I.'];
+    if (scope === 'avulso' && !labor && contract && contract !== 'Preciso confirmar no contrato') {
+      return ['III','Serviço avulso de instalação, manutenção ou reparo, sem execução de obra. Confira se o objeto é conservação sujeita ao Anexo IV.'];
+    }
+    return ['','Confirme se o contrato trata de obra de engenharia ou de serviço avulso.'];
+  }
+  if (['obra','operacao'].includes(entry.kind)) {
+    const matches = entry.code === '070201' ? contract === 'Execução por administração' :
+      entry.code === '070202' ? ['Empreitada total','Empreitada parcial ou subempreitada'].includes(contract) : hasWorkContract;
+    if (!matches || entry.kind === 'operacao') return ['', 'Confirme se o prestador executa a obra de engenharia e se o contrato corresponde ao serviço selecionado.'];
+    return ['IV','Execução de construção ou obra de engenharia, incluindo subempreitada, conforme art. 18, § 5º-C, I.'];
+  }
+  if (['manutencao','conserto','instalacao'].includes(entry.kind)) {
+    if (labor) return ['','Cessão de mão de obra pode impedir o Simples neste cenário. Confirme o contrato.'];
+    return outcome ? ['III','Instalação, manutenção ou reparo avulso, sem execução de obra, conforme art. 18, § 5º-B, IX e SC Cosit 68/2022.'] :
+      ['','Confirme se é serviço avulso ou parte de obra de engenharia.'];
+  }
+  if (entry.kind === 'profissional' && ['070101','071901','170101'].includes(entry.code)) {
+    if (!outcome) return ['','Confirme o escopo da prestação técnica contratada por resultado.'];
+    const factor = brazilianNumber($('fator-r').value);
+    if (!Number.isFinite(factor)) return ['','Informe o fator R para definir o Anexo III ou V.'];
+    return [factor >= 28 ? 'III' : 'V','Serviço técnico sujeito ao fator R, conforme art. 18, §§ 5º-I e 5º-J. Fator informado ' + percent(factor) + '.'];
+  }
+  if (entry.kind === 'locacao') return ['','A locação pura deve ser segregada na apuração do Simples sem a parcela do ISS. Esta simulação é para prestação de serviços.'];
+  if (entry.kind === 'domestico') return ['','O vínculo doméstico tem tratamento próprio.'];
+  return ['','Confirme o objeto do contrato para definir o anexo.'];
+}
+
+let annexContext = '';
+function updateAnnex() {
+  const simple = $('regime').value === 'Simples Nacional';
+  const entry = selected();
+  $('simples-inputs').hidden = !simple;
+  $('escopo-box').hidden = !simple || !['070501','070502'].includes(entry.code);
+  $('fator-box').hidden = !simple || entry.kind !== 'profissional';
+  $('annex-live').hidden = !simple;
+  if (!simple) {
+    annexContext = '';
+    $('anexo').value = 'A confirmar';
+    return;
+  }
+  const [annex,note] = annexFor(entry);
+  const current = JSON.stringify([activity.value,service.value,$('contratacao').value,$('fator-r').value,$('escopo-simples').value]);
+  if (current !== annexContext) {
+    $('anexo').value = annex ? 'Anexo ' + annex : 'A confirmar';
+    annexContext = current;
+  }
+  renderLiveRates(annex);
+  $('annex-live').textContent = (annex ? 'Anexo ' + annex + ' sugerido. ' : 'Anexo a confirmar. ') + note;
+}
+
+function addTableRow(body,values,header=false) {
+  const row = document.createElement('tr');
+  values.forEach((value,index) => {
+    const cell = document.createElement(header ? 'th' : 'td');
+    if (header) cell.scope = 'col';
+    cell.textContent = value;
+    row.append(cell);
+  });
+  body.append(row);
+}
+
+function renderSimples() {
+  const section = $('simples-result');
+  section.hidden = !isSimples();
+  if (section.hidden) return;
+  const message = $('simples-message');
+  const breakdown = $('das-table');
+  const bands = $('faixas');
+  breakdown.hidden = true;
+  bands.hidden = true;
+  if ($('regime').value === 'MEI') {
+    message.textContent = 'O MEI recolhe pelo SIMEI em valor mensal fixo. Esta tabela se aplica aos Anexos III, IV e V.';
+    return;
+  }
+  const [annex,note] = annexFor(selected());
+  const manual = $('anexo').value;
+  message.textContent = (annex ? 'Anexo ' + annex + '. ' : '') + note;
+  if (!annex || manual !== 'Anexo ' + annex) {
+    if (annex) message.textContent += ' O anexo escolhido diverge da sugestão. Confira o enquadramento antes de simular.';
+    return;
+  }
+  const table = simpleTables[annex];
+  const bandsBody = $('faixas-body');
+  bandsBody.replaceChildren();
+  bounds.forEach((limit,index) => addTableRow(bandsBody,[
+    String(index+1),money.format(limit),percent(table.rates[index]),money.format(table.deductions[index])
+  ]));
+  bands.hidden = false;
+  const gross = currencyNumber($('rbt12').value);
+  const base = currencyNumber($('valor-servico').value);
+  const band = bounds.findIndex(limit => gross <= limit);
+  if (!(gross > 0) || !(base > 0) || band < 0) {
+    message.textContent += ' Para estimar os valores, informe o RBT12 válido dentro do limite de R$ 4,8 milhões e o valor positivo do serviço.';
+    return;
+  }
+  if (band === 5) {
+    message.textContent += ' Na 6ª faixa, confira o sublimite, o período em que produz efeitos e a apuração do ISS antes de estimar valores pelo PGDAS-D.';
+    return;
+  }
+  const effective = (gross * table.rates[band] / 100 - table.deductions[band]) / gross * 100;
+  const shares = table.shares[band];
+  const effectiveParts = shares.map(share => effective * share / 100);
+  if (table.capped && effectiveParts[5] > 5) {
+    table.capped.forEach((share,index) => { effectiveParts[index] = (effective - 5) * share / 100; });
+    effectiveParts[5] = 5;
+  }
+  const body = $('das-body');
+  body.replaceChildren();
+  ['IRPJ','CSLL','Cofins','PIS/Pasep','CPP','ISS'].forEach((tax,index) => {
+    if (tax === 'CPP' && annex === 'IV') {
+      addTableRow(body,[tax,'Fora do DAS','Apuração previdenciária separada']);
+      return;
+    }
+    addTableRow(body,[tax,percent(effectiveParts[index]),money.format(base * effectiveParts[index] / 100)]);
+  });
+  addTableRow(body,['Total estimado',percent(effective),money.format(base * effective / 100)]);
+  message.textContent += ' Faixa ' + (band+1) + ', alíquota nominal ' + percent(table.rates[band]) + ' e dedução de ' + money.format(table.deductions[band]) + '.';
+  breakdown.hidden = false;
+}
+
+const companyKey = 'mf-fiscal-empresa-v1';
+let company = null;
+function loadCompany() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(companyKey));
+    if (saved && [...$('regime').options].some(option => option.value === saved.regime && option.value) &&
+        typeof saved.prestador === 'string' && cityPattern.test(saved.prestador)) return saved;
+  } catch {}
+  return null;
+}
+function applyCompany() {
+  if (company) {
+    $('empresa-nome').value = company.name || '';
+    $('regime').value = company.regime;
+    $('prestador').value = company.prestador;
+  }
+  updateAnnex();
+  updateQuestions();
+  updateProgress();
+}
+$('salvar-empresa').addEventListener('click',() => {
+  const regime = $('regime').value;
+  const city = $('prestador').value.trim();
+  if (!regime || !cityPattern.test(city)) {
+    $('empresa-status').textContent = 'Para salvar, selecione o regime e informe o município e a UF do prestador no formulário.';
+    (!regime ? $('regime') : $('prestador')).focus();
+    return;
+  }
+  const next = {name:$('empresa-nome').value.trim(),regime,prestador:city};
+  try {
+    localStorage.setItem(companyKey,JSON.stringify(next));
+    company = next;
+    $('empresa-status').textContent = 'Dados salvos neste navegador.';
+    $('remover-empresa').hidden = false;
+  } catch {
+    $('empresa-status').textContent = 'O navegador não permitiu salvar neste arquivo.';
+  }
+});
+$('remover-empresa').addEventListener('click',() => {
+  try { localStorage.removeItem(companyKey); } catch {
+    $('empresa-status').textContent = 'O navegador não permitiu remover o cadastro.';
+    return;
+  }
+  company = null;
+  $('empresa-nome').value = '';
+  $('empresa-status').textContent = 'Cadastro removido deste navegador.';
+  $('remover-empresa').hidden = true;
+  $('salvar-empresa').focus();
+});
+for (const [id,max,message] of currencyFields) {
+  const field = $(id);
+  field.addEventListener('blur',() => {
+    formatCurrency(field,max,message);
+    updateAnnex();
+  });
+  field.addEventListener('input',() => {
+    field.removeAttribute('aria-invalid');
+    $(id + '-erro').textContent = '';
+  });
+}
+form.addEventListener('reset',() => {
+  for (const [id] of currencyFields) {
+    $(id).removeAttribute('aria-invalid');
+    $(id + '-erro').textContent = '';
+  }
+});
+company = loadCompany();
+if (company) {
+  $('empresa-status').textContent = 'Dados da empresa carregados.';
+  $('remover-empresa').hidden = false;
+}
+applyCompany();
+for (const event of ['change','input']) form.addEventListener(event,updateAnnex);
+form.addEventListener('reset',() => queueMicrotask(() => {
+  annexContext = '';
+  applyCompany();
+}));
+activity.addEventListener('change',() => { $('escopo-simples').value = ''; updateAnnex(); });
+service.addEventListener('change',() => { $('escopo-simples').value = ''; updateAnnex(); });
+$('tabela').addEventListener('click',event => {
+  if (!event.target.closest('button')) return;
+  $('escopo-simples').value = '';
+  updateAnnex();
+});
+</script>
+<script>
+const withholdingPanel = $('withholding-panel');
+
+const withholdingAnswers = ['withholding-payer','withholding-payment','withholding-inss-case','withholding-iss-simple','withholding-iss-rbt'];
+const retain = (name,rate,hint,requireBase=false) => ({name,status:'apply',rate,hint,requireBase});
+const omit = (name,hint) => ({name,status:'exempt',hint});
+const ask = (name,hint) => ({name,status:'pending',hint});
+
+const altamiraIssRates = {
+  '0305':5, '0701':5, '0702':5, '0704':5, '0705':5, '0706':5,
+  '0709':5, '0710':5, '0713':5, '0719':5, '1104':5, '1401':5, '1701':5
+};
+
+function issMunicipality(entry) {
+  return $(issAtSite.has(entry.code.slice(0,4)) ? 'local' : 'prestador').value.trim();
+}
+
+function municipalIssRate(entry) {
+  const competent = issMunicipality(entry);
+  const custom = registeredMunicipalIss(competent,entry.code);
+  if (custom) return custom.rate;
+  const city = cityKey(competent);
+  return ['altamira/pa','altamira-pa'].includes(city) ? altamiraIssRates[entry.code.slice(0,4)] : undefined;
+}
+
+function simpleIssRate(selectedAnnex, revenue) {
+  const annex = selectedAnnex.replace(/^Anexo /,'');
+  const table = simpleTables[annex];
+  const band = bounds.findIndex(limit => revenue <= limit);
+  if (!table || !(revenue > 0) || band < 0 || band === 5) return null;
+  const effective = table.rates[band] - table.deductions[band] * 100 / revenue;
+  return {annex, band:band+1, rate:Math.min(5, effective * table.shares[band][5] / 100)};
+}
+
+function autoIssWithholding(entry, individual, normalRegime) {
+  const city = issMunicipality(entry);
+  const custom = registeredMunicipalIss(city,entry.code);
+  const localRule = custom?.rules[$('tomador').value];
+  const municipalRate = municipalIssRate(entry);
+  const subitem = entry.code.slice(0,4);
+  const regime = $('regime').value;
+  const fixed = regime === 'MEI';
+  const sameCity = cityKey(city).replace('-','/') === cityKey($('prestador').value.trim()).replace('-','/');
+  const statutory = !individual && statutoryWithholding.has(subitem);
+  const knownIncidence = statutory || localRule === 'apply' || (!custom && !individual && municipalRate !== undefined);
+  $('withholding-iss-simple-box').hidden = true;
+  $('withholding-iss-rbt-box').hidden = true;
+
+  if (fixed && sameCity) return omit('ISS','Sem retenção na regra do ISS fixo no município do estabelecimento.');
+  if (fixed) return ask('ISS','ISS fixo com município competente diferente do estabelecimento. Confira a regra aplicável com o município.');
+  if (localRule === 'exempt') {
+    if (statutory) return ask('ISS','A regra cadastrada indica sem retenção, mas o item prevê responsabilidade do tomador PJ. Confirme a exceção antes de calcular.');
+    return omit('ISS','Sem retenção para este tomador conforme o cadastro de ' + city + '.');
+  }
+  if (!knownIncidence) {
+    const note = municipalRate !== undefined ? ' A alíquota geral cadastrada é ' + percent(municipalRate) + '.' : '';
+    const pending = ask('ISS','Confirme se o tomador é responsável pelo ISS em ' + city + '.' + note);
+    if (custom && normalRegime && municipalRate > 0) pending.rate = percent(municipalRate).slice(0,-1);
+    return pending;
+  }
+
+  if (normalRegime && municipalRate !== undefined) {
+    if (municipalRate === 0) return omit('ISS','Alíquota zero cadastrada para este código em ' + city + '.');
+    const source = custom ? 'Cadastro municipal de ' + city + (custom.basis ? ' · ' + custom.basis : '.') : 'Alíquota geral para este serviço em ' + city + ' pelo Código Tributário de Altamira.';
+    return retain('ISS',percent(municipalRate).slice(0,-1),source);
+  }
+  if (regime !== 'Simples Nacional') {
+    return retain('ISS','','Informe a alíquota de retenção aplicável em ' + city + '.');
+  }
+
+  const method = $('withholding-iss-simple').value;
+  $('withholding-iss-simple-box').hidden = false;
+  if (method === 'manual') return retain('ISS','','Informe a alíquota de retenção confirmada no PGDAS-D ou no emissor municipal.');
+  if (method === 'start') return retain('ISS','2,00','ISS retido no mês de início da empresa, conforme art. 27, II, da Resolução CGSN 140/2018.');
+  if (!method) return retain('ISS','','Informe acima a referência do RBT12 para determinar a alíquota do ISS.');
+  const prior = method === 'same' ? $('rbt12').value : $('withholding-iss-rbt').value;
+  $('withholding-iss-rbt-box').hidden = method !== 'prior';
+  const revenue = currencyNumber(prior);
+  const calculation = simpleIssRate($('anexo').value, revenue);
+  if (calculation) {
+    return retain('ISS',percent(calculation.rate).slice(0,-1),'ISS efetivo do Anexo ' + calculation.annex +
+      ', faixa ' + calculation.band + ', calculado com o RBT12 de referência do mês anterior. Município competente: ' + city + '.');
+  }
+  if (!(revenue > 0)) return retain('ISS','','Informe um RBT12 de referência válido ou use a alíquota confirmada.');
+  if (revenue > 3600000) return retain('ISS','','Confira o sublimite e a apuração do ISS fora do DAS. Informe a alíquota confirmada para este caso.');
+  return retain('ISS','','Anexo do Simples indefinido. Confira o serviço e o enquadramento ou informe a alíquota confirmada.');
+}
+
+function withholdingRules(entry,gross) {
+  const payer = $('tomador').value;
+  const privateCompany = payer === 'Pessoa jurídica privada';
+  const individual = payer === 'Pessoa física';
+  const publicBody = payer === 'Órgão ou entidade pública';
+  const regime = $('regime').value;
+  const contract = $('contratacao').value;
+  const annex = $('anexo').value;
+  const simple = isSimples();
+  const normalRegime = ['Lucro Presumido','Lucro Real'].includes(regime);
+  const labor = contract === 'Disponibilização de mão de obra ao tomador';
+  const partial = contract === 'Empreitada parcial ou subempreitada';
+  const resultContract = contract === 'Serviço contratado por resultado';
+  const repair = ['conserto','manutencao','instalacao'].includes(entry.kind);
+  const technical = ['070101','071901'].includes(entry.code);
+  const buildingCleaning = entry.code === '071002';
+  const inferredFederal = ['limpeza','manutencao'].includes(entry.kind) || technical ||
+    (labor && ['obra','operacao','instalacao'].includes(entry.kind));
+  const combinedBelowMinimum = Math.round(gross * 4.65) <= 1000;
+  const irStandard = buildingCleaning || (labor && ['obra','operacao','instalacao'].includes(entry.kind)) ? '1,00' : technical ? '1,50' : '';
+  const irBelowMinimum = irStandard && Math.round(gross * Number(irStandard.replace(',','.'))) <= 1000;
+  const payerOptIn = $('withholding-payer').value;
+  const singlePayment = $('withholding-payment').value;
+  $('withholding-payer-box').hidden = !(privateCompany && normalRegime && inferredFederal);
+  $('withholding-payment-box').hidden = !(privateCompany && normalRegime &&
+    (irBelowMinimum || (inferredFederal && payerOptIn === 'no' && combinedBelowMinimum)));
+
+  const iss = autoIssWithholding(entry, individual, normalRegime);
+
+  const normalInss = !individual && regime !== 'MEI' && (normalRegime || annex === 'Anexo IV') &&
+    (entry.kind === 'limpeza' && (labor || partial) || entry.code === '071301' && payer === 'Pessoa jurídica privada' && resultContract);
+  $('withholding-inss-box').hidden = !normalInss;
+  const condition = $('withholding-inss-case').value;
+  const cprb = $('cprb').value;
+  const inssRate = cprb === 'Sim, comprovada' ? '3,50' : cprb === 'Não' ? '11,00' : '';
+  const belowInssMinimum = Math.round(gross * 11) < 1000;
+  let inss = ask('INSS','Confirme o tipo de contratação, a incidência previdenciária e o destaque antes de calcular.');
+  if (individual || regime === 'MEI' || (simple && ['Anexo III','Anexo V'].includes(annex) && !labor) || (repair && resultContract) || (technical && resultContract)) {
+    inss = omit('INSS','Sem retenção previdenciária na hipótese usual do serviço e da contratação informados.');
+  } else if (normalInss) {
+    if (condition === 'exempt' || belowInssMinimum) inss = omit('INSS',belowInssMinimum ? 'Dispensa de valor mínimo por documento na regra geral.' : 'Dispensa legal informada.');
+    else if (!condition) inss = ask('INSS','Informe a condição da retenção de INSS acima para definir base, alíquota ou dispensa.');
+    else if (condition === 'special') inss = retain('INSS','','Informe a base e a alíquota aplicáveis ao caso.',true);
+    else inss = retain('INSS',inssRate,inssRate ? 'Alíquota calculada pela opção de CPRB informada.' : 'Confirme a CPRB no formulário ou informe aqui a alíquota previdenciária aplicável.');
+    if (belowInssMinimum) $('withholding-inss-box').hidden = true;
+  }
+
+  const federalExempt = individual || (privateCompany && simple);
+  let irrf = ask('IRRF',publicBody ? 'Informe o enquadramento do ente pagador e a alíquota aplicável ao pagamento público.' : 'Confirme se o serviço tem previsão de IRRF para este tomador.');
+  if (federalExempt) irrf = omit('IRRF','Dispensa pela regra geral do regime e tomador informados.');
+  else if (privateCompany && normalRegime && irStandard) {
+    if (irBelowMinimum && singlePayment === 'yes') irrf = omit('IRRF','Dispensa de até R$ 10,00 para este pagamento ou crédito.');
+    else if (irBelowMinimum) irrf = ask('IRRF','A retenção depende do total pago ou creditado. Informe se o pagamento é isolado ou use a apuração confirmada pelo tomador.');
+    else irrf = retain('IRRF',irStandard,'Alíquota da hipótese identificada para tomador privado.');
+  } else if (privateCompany && normalRegime && entry.kind === 'conserto' && resultContract) {
+    irrf = omit('IRRF','Conserto isolado por resultado, sem hipótese usual de retenção para o cenário.');
+  }
+
+  const contributions = [['CSLL','1,00'],['Cofins','3,00'],['PIS/Pasep','0,65']].map(([name,rate]) => {
+    if (federalExempt || privateCompany && payerOptIn === 'yes') return omit(name,'Dispensa pela regra geral do regime e tomador informados.');
+    if (privateCompany && normalRegime && inferredFederal) {
+      if (!payerOptIn) return ask(name,'Informe acima se o tomador é optante pelo Simples.');
+      if (combinedBelowMinimum && singlePayment === 'yes') return omit(name,'Total das contribuições de até R$ 10,00 no pagamento isolado.');
+      if (combinedBelowMinimum) return ask(name,'Confirme se o pagamento é isolado. Se houver outros valores ou parcelas, apure com o tomador.');
+      return retain(name,rate,'Alíquota padrão da retenção entre empresas privadas para este serviço.');
+    }
+    if (privateCompany && normalRegime && entry.kind === 'conserto' && resultContract) return omit(name,'Mero conserto isolado fica fora da hipótese de manutenção da IN SRF 459/2004.');
+    return ask(name,publicBody ? 'Confirme a norma do ente pagador, a incidência e a alíquota.' : 'Confirme se esta contribuição incide sobre o serviço e o pagamento.');
+  });
+  return [iss,inss,irrf,...contributions];
+}
+
+function renderWithholdings(entry, eligible, changedField = '') {
+  const refresh = Boolean(changedField);
+  const rows = $('withholding-body');
+  const drafts = refresh ? [...rows.rows].map(row => {
+    const [status,base,rate] = row.querySelectorAll('select,input');
+    return {status:status.dataset.edited ? status.value : '',base:base.value,rate:rate.dataset.edited ? rate.value : ''};
+  }) : [];
+  if (!refresh) {
+    for (const id of withholdingAnswers) $(id).value = '';
+    $('withholding-iss-rbt').removeAttribute('aria-invalid');
+    $('withholding-iss-rbt-erro').textContent = '';
+  }
+  rows.replaceChildren();
+  withholdingPanel.hidden = !eligible;
+  if (!eligible) return;
+
+  const gross = currencyNumber($('valor-servico').value);
+  $('withholding-input-needed').hidden = gross > 0 && Number.isFinite(gross) && Number.isSafeInteger(Math.round(gross * 100));
+  $('withholding-calculator').hidden = !$('withholding-input-needed').hidden;
+  if ($('withholding-calculator').hidden) return;
+
+  const grossCents = Math.round(gross * 100);
+  $('withholding-gross').textContent = money.format(grossCents / 100);
+  const lines = withholdingRules(entry, gross).map((rule,index) => {
+    const changedIssReference = index === 0 && ['municipal-registry','withholding-iss-simple','withholding-iss-rbt'].includes(changedField);
+    const draft = changedIssReference ? undefined : drafts[index];
+    const row = document.createElement('tr');
+    const name = document.createElement('th');
+    name.scope = 'row';
+    name.textContent = rule.name;
+    const hint = document.createElement('small');
+    hint.textContent = rule.hint;
+    name.append(hint);
+    const status = document.createElement('select');
+    status.setAttribute('aria-label', 'Retenção de ' + rule.name);
+    status.add(new Option('A confirmar','pending'));
+    status.add(new Option('Reter','apply'));
+    status.add(new Option('Sem retenção','exempt'));
+    status.value = draft?.status || rule.status;
+    if (draft?.status) status.dataset.edited = 'true';
+    status.addEventListener('change',() => { status.dataset.edited = 'true'; });
+
+    const rate = document.createElement('input');
+    rate.inputMode = 'decimal';
+    rate.placeholder = 'Ex. 2,00';
+    rate.setAttribute('aria-label','Alíquota de ' + rule.name + ' em porcentagem');
+    rate.value = draft?.rate || rule.rate || '';
+    if (draft?.rate && rate.value === draft.rate) rate.dataset.edited = 'true';
+    rate.addEventListener('input',() => { rate.dataset.edited = 'true'; });
+
+    const base = document.createElement('input');
+    base.inputMode = 'decimal';
+    base.placeholder = rule.requireBase ? 'Informe a base' : money.format(gross);
+    base.value = draft?.base || '';
+    base.setAttribute('aria-label','Base de cálculo de ' + rule.name + ' em reais');
+    base.addEventListener('blur',() => {
+      const amount = currencyNumber(base.value);
+      if (amount > 0 && amount <= gross) base.value = money.format(amount);
+    });
+    const value = document.createElement('td');
+    const note = document.createElement('small');
+    const amount = document.createElement('span');
+    value.append(amount,note);
+    row.append(name);
+    for (const field of [status,base,rate]) {
+      const cell = document.createElement('td');
+      cell.append(field);
+      row.append(cell);
+    }
+    row.append(value);
+    rows.append(row);
+    return {status,rate,base,amount,note,rule};
+  });
+
+  function recalculate() {
+    let total = 0;
+    let pending = 0;
+    for (const line of lines) {
+      const {status,rate,base,amount,note,rule} = line;
+      const applying = status.value === 'apply';
+      rate.disabled = !applying;
+      base.disabled = !applying;
+      rate.removeAttribute('aria-invalid');
+      base.removeAttribute('aria-invalid');
+      note.textContent = '';
+      if (!applying) {
+        amount.textContent = status.value === 'exempt' ? money.format(0) : 'A confirmar';
+        if (status.value === 'pending') pending++;
+        continue;
+      }
+      const typedRate = rate.value.trim().replace(/%$/, '').trim();
+      const aliquot = /^\d{1,3}(?:[,.]\d{1,4})?$/.test(typedRate) ? Number(typedRate.replace(',','.')) : NaN;
+      const baseValue = base.value.trim() ? currencyNumber(base.value) : rule.requireBase ? NaN : gross;
+      const validRate = aliquot > 0 && aliquot <= 100;
+      const validBase = baseValue > 0 && baseValue <= gross;
+      if (!validRate || !validBase) {
+        pending++;
+        amount.textContent = 'A confirmar';
+        note.textContent = !validRate ? 'Informe uma alíquota entre 0 e 100%.' : 'Informe uma base positiva de até o valor bruto.';
+        if (!validRate) rate.setAttribute('aria-invalid','true');
+        if (!validBase) base.setAttribute('aria-invalid','true');
+        continue;
+      }
+      const rateUnits = Math.round(aliquot * 10000);
+      const baseCents = Math.round(baseValue * 100);
+      const retainedCents = Number((BigInt(baseCents) * BigInt(rateUnits) + 500000n) / 1000000n);
+      total += retainedCents;
+      amount.textContent = money.format(retainedCents / 100);
+    }
+    $('withholding-total').textContent = money.format(total / 100);
+    const excess = total > grossCents;
+    $('withholding-net').textContent = pending || excess ? 'A confirmar' : money.format((grossCents - total) / 100);
+    $('withholding-status').textContent = excess ? 'O total retido supera o valor bruto. Revise as bases e alíquotas.' :
+      pending ? 'Confirme ' + pending + (pending === 1 ? ' tributo para calcular o líquido.' : ' tributos para calcular o líquido.') : '';
+  }
+  for (const id of withholdingAnswers) $(id).onchange = () => renderWithholdings(entry, eligible, id);
+  $('withholding-iss-rbt').onblur = event => {
+    formatCurrency(event.target,4800000,'Informe um RBT12 positivo e até R$ 4.800.000,00.');
+    renderWithholdings(entry,eligible,'withholding-iss-rbt');
+  };
+  rows.oninput = recalculate;
+  rows.onchange = recalculate;
+  recalculate();
+}
+</script>
+<script>
+const municipalIssStorage = 'mf-fiscal-aliquotas-iss-v1';
+const municipalIssCodes = new Map();
+for (const entries of Object.values(matrix)) {
+  for (const entry of entries) {
+    if (/^\d{6}$/.test(entry.code) && !municipalIssCodes.has(entry.code)) {
+      municipalIssCodes.set(entry.code,entry.name);
+    }
+  }
+}
+const municipalRules = [
+  ['Pessoa jurídica privada','iss-rule-private'],
+  ['Órgão ou entidade pública','iss-rule-public'],
+  ['Pessoa física','iss-rule-individual']
+];
+const canonicalMunicipality = value => cityKey(value).replace(/[-/]([a-z]{2})$/,'/$1');
+const registrationKey = (city,code) => canonicalMunicipality(city) + '|' + code;
+const municipalRegistrations = new Map();
+try {
+  const registered = JSON.parse(localStorage.getItem(municipalIssStorage));
+  if (Array.isArray(registered)) {
+    for (const record of registered) {
+      if (record && typeof record.city === 'string' && cityPattern.test(record.city) &&
+          municipalIssCodes.has(record.code) && Number.isFinite(record.rate) && record.rate >= 0 && record.rate <= 5 &&
+          record.rules && typeof record.rules === 'object') {
+        municipalRegistrations.set(registrationKey(record.city,record.code),record);
+      }
+    }
+  }
+} catch {}
+function registeredMunicipalIss(city,code) {
+  return municipalRegistrations.get(registrationKey(city,code));
+}
+
+const municipalForm = $('iss-registration');
+const registryStatus = $('iss-registry-status');
+const registryList = $('iss-registry-list');
+const codeList = [...municipalIssCodes].sort(([a],[b]) => a.localeCompare(b));
+for (const [code,example] of codeList) {
+  $('iss-code').add(new Option(formatCode(code) + ' · ' + example,code));
+}
+
+function localIssPercent(raw) {
+  const clean = raw.trim().replace(/%$/,'').trim();
+  return /^\d(?:[,.]\d{1,4})?$/.test(clean) ? Number(clean.replace(',','.')) : NaN;
+}
+
+function saveMunicipalRegistry(records) {
+  try {
+    localStorage.setItem(municipalIssStorage,JSON.stringify([...records.values()]));
+  } catch {
+    registryStatus.textContent = 'O navegador não permitiu salvar o cadastro de ISS neste arquivo.';
+    return false;
+  }
+  municipalRegistrations.clear();
+  for (const [key,record] of records) municipalRegistrations.set(key,record);
+  renderMunicipalRegistry();
+  if (!result.hidden && !$('withholding-panel').hidden) {
+    renderWithholdings(selected(),true,'municipal-registry');
+  }
+  return true;
+}
+
+function loadMunicipalEditor(record) {
+  $('iss-city').value = record.city;
+  $('iss-code').value = record.code;
+  $('iss-rate').value = record.rate === undefined ? '' : percent(record.rate).slice(0,-1);
+  $('iss-basis').value = record.basis || '';
+  for (const [type,id] of municipalRules) $(id).value = record.rules?.[type] || '';
+  $('iss-rate').focus();
+}
+
+function renderMunicipalRegistry() {
+  registryList.replaceChildren();
+  const records = [...municipalRegistrations.values()].sort((a,b) =>
+    a.city.localeCompare(b.city,'pt-BR') || a.code.localeCompare(b.code));
+  $('iss-registry-empty').hidden = records.length > 0;
+  $('iss-registry-table').hidden = records.length === 0;
+  for (const record of records) {
+    const row = document.createElement('tr');
+    const description = [record.city,formatCode(record.code),percent(record.rate),
+      municipalRules.map(([type]) => record.rules[type] ? type + ': ' + (record.rules[type] === 'apply' ? 'reter' : 'sem retenção') : '').filter(Boolean).join(' · ') || 'A confirmar',
+      record.basis || '—'];
+    for (const value of description) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    const actions = document.createElement('td');
+    const edit = document.createElement('button');
+    edit.type = 'button';
+    edit.textContent = 'Editar';
+    edit.addEventListener('click',() => loadMunicipalEditor(record));
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.textContent = 'Remover';
+    remove.addEventListener('click',() => {
+      const next = new Map(municipalRegistrations);
+      next.delete(registrationKey(record.city,record.code));
+      if (saveMunicipalRegistry(next)) {
+        registryStatus.textContent = 'Alíquota removida do cadastro.';
+        $('iss-city').focus();
+      }
+    });
+    actions.append(edit,remove);
+    row.append(actions);
+    registryList.append(row);
+  }
+}
+
+municipalForm.addEventListener('submit',event => {
+  event.preventDefault();
+  const city = $('iss-city').value.trim();
+  const code = $('iss-code').value;
+  const rate = localIssPercent($('iss-rate').value);
+  if (!cityPattern.test(city) || !municipalIssCodes.has(code) || !(rate >= 0 && rate <= 5)) {
+    const [id,message] = !cityPattern.test(city) ? ['iss-city','Informe Município/UF, como Santarém/PA.'] :
+      !municipalIssCodes.has(code) ? ['iss-code','Selecione o código nacional do serviço.'] :
+      ['iss-rate','Informe uma alíquota entre 0 e 5%, com até quatro casas decimais.'];
+    registryStatus.textContent = message;
+    $(id).focus();
+    return;
+  }
+  const rules = Object.fromEntries(municipalRules.map(([type,id]) => [type,$(id).value]));
+  const entry = {city,code,rate,rules,basis:$('iss-basis').value.trim()};
+  const next = new Map(municipalRegistrations);
+  next.set(registrationKey(city,code),entry);
+  if (saveMunicipalRegistry(next)) registryStatus.textContent = 'Alíquota salva para ' + city + ' · ' + formatCode(code) + '.';
+});
+
+$('iss-use-current').addEventListener('click',() => {
+  const entry = selected();
+  if (!municipalIssCodes.has(entry.code)) {
+    registryStatus.textContent = 'Selecione um serviço com código nacional na consulta.';
+    $('atividade').focus();
+    return;
+  }
+  const city = issMunicipality(entry);
+  loadMunicipalEditor(registeredMunicipalIss(city,entry.code) || {city,code:entry.code});
+});
+renderMunicipalRegistry();
+</script>
+<script>
+const rtcCorrelations = {"03.05|1.0105.70.00":[["050101","000001","local da prestação no estabelecimento do fornecedor (prestador)","Situações tributadas integralmente pelo IBS e CBS."],["050102","000001","local da prestação diverso do estabelecimento do fornecedor","Situações tributadas integralmente pelo IBS e CBS."]],"07.01|1.1403.30.00":[["100301","200052","Domicílio principal do adquirente","Prestação de serviços de profissões intelectuais"]],"07.02|1.0101.11.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0101.12.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0101.21.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0101.22.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0102.35.20":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020201","200038","local do imóvel","Fornecimento dos insumos agropecuários e aquícolas (Anexo IX)"]],"07.02|1.0102.52.20":[["020202","200046","local do imóvel","Operações com bens imóveis"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0103.20.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel",""],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0105.50.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0105.90.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.11.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.19.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.21.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.22.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0107.30.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0107.40.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.32.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0106.40.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.02|1.0107.90.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.04|1.0103.10.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.05|1.0107.30.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020202","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.06|1.0107.10.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.06|1.0107.40.00":[["020201","200046","local do imóvel","Operações com bens imóveis"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.09|1.2406.10.00":[["020202","000001","local do imóvel","Situações tributadas integralmente pelo IBS e CBS."]],"07.10|1.1803.10.00":[["020201","000001","local do imóvel","Situações tributadas integralmente pelo IBS e CBS."],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.10|1.1803.22.00":[["020201","000001","local do imóvel","Situações tributadas integralmente pelo IBS e CBS."],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.13|1.1803.21.00":[["020201","000001","local do imóvel","Situações tributadas integralmente pelo IBS e CBS."]],"07.19|1.1402.15.00":[["020201","200052","local do imóvel","Prestação de serviços de profissões intelectuais"],["020202","200052","local do imóvel","Prestação de serviços de profissões intelectuais"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"07.19|1.1403.30.00":[["020201","200052","local do imóvel","Prestação de serviços de profissões intelectuais"],["020202","200052","local do imóvel","Prestação de serviços de profissões intelectuais"],["020201","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"],["020202","200045","local do imóvel","Operações relacionadas a projetos de reabilitação urbana de zonas históricas e de áreas críticas de recuperação e reconversão urbanística"]],"11.04|1.0601.90.00":[["050101","000001","local da prestação no estabelecimento do fornecedor (prestador)","Situações tributadas integralmente pelo IBS e CBS."],["050102","000001","local da prestação diverso do estabelecimento do fornecedor","Situações tributadas integralmente pelo IBS e CBS."]],"14.01|1.2001.60.00":[["050101","000001","local da prestação no estabelecimento do fornecedor (prestador)","Situações tributadas integralmente pelo IBS e CBS."],["050102","000001","local da prestação diverso do estabelecimento do fornecedor","Situações tributadas integralmente pelo IBS e CBS."]],"14.01|1.2001.89.00":[["050101","000001","local da prestação no estabelecimento do fornecedor (prestador)","Situações tributadas integralmente pelo IBS e CBS."],["050102","000001","local da prestação diverso do estabelecimento do fornecedor","Situações tributadas integralmente pelo IBS e CBS."]],"17.01|1.1410.90.00":[["100301","000001","Domicílio principal do adquirente","Situações tributadas integralmente pelo IBS e CBS."]]};
+const rtcRates = {
+  '000001': [0.10,0.90,'Tributação integral em 2026'],
+  '200045': [0.04,0.36,'Redução de 60% para projeto de reabilitação urbana aprovado, art. 158'],
+  '200046': [0.05,0.45,'Redução de 50% para construção enquadrada no regime imobiliário, art. 261'],
+  '200052': [0.07,0.63,'Redução de 30% para profissão intelectual que cumpra os requisitos do art. 127']
+};
+const rtcSection = $('rtc-panel');
+const rtcOptions = $('rtc-operation');
+const rtcBase = $('rtc-base');
+let rtcCandidates = [];
+
+function updateRtcCalculation() {
+  const value = rtcOptions.value === '' ? undefined : rtcCandidates[Number(rtcOptions.value)];
+  const fields = $('rtc-fields');
+  const values = $('rtc-values');
+  fields.replaceChildren();
+  values.replaceChildren();
+  $('rtc-amounts').hidden = true;
+  $('rtc-base-box').hidden = true;
+  if (!value) return;
+  const [indicator,classification,place,description] = value;
+  addField(fields,'CST do IBS/CBS',classification.slice(0,3));
+  addField(fields,'Classificação tributária (cClassTrib)',classification + (description ? ' · ' + description : ''));
+  addField(fields,'Indicador da operação (cIndOp)',indicator);
+  addField(fields,'Local de incidência',place);
+  const rates = rtcRates[classification];
+  if (!rates) {
+    addField(fields,'Alíquotas','Confirme as reduções, o diferimento e as condições do tratamento específico no emissor.');
+    return;
+  }
+  addField(fields,'Alíquotas de referência em 2026',rates[2]);
+  $('rtc-base-box').hidden = false;
+  $('rtc-amounts').hidden = false;
+  const base = currencyNumber(rtcBase.value);
+  for (const [tax,rate] of [['IBS estadual',rates[0]],['IBS municipal',0],['CBS',rates[1]]]) {
+    addTableRow(values,[tax,percent(rate),base >= 0 ? money.format(Math.round(base * rate) / 100) : 'Informe a base']);
+  }
+}
+
+function renderRtc(entry) {
+  rtcOptions.replaceChildren(new Option('Selecione o enquadramento da operação',''));
+  $('rtc-fields').replaceChildren();
+  $('rtc-values').replaceChildren();
+  $('rtc-base-box').hidden = true;
+  $('rtc-amounts').hidden = true;
+  $('rtc-choice').hidden = true;
+  rtcBase.value = '';
+  rtcBase.removeAttribute('aria-invalid');
+  $('rtc-base-erro').textContent = '';
+  rtcCandidates = [];
+  const message = $('rtc-message');
+  if (!entry.code || entry.code === '—') {
+    message.textContent = entry.kind === 'locacao'
+      ? 'A locação pura tem tratamento próprio para IBS e CBS. Confira o documento fiscal e o regime aplicável à locação.'
+      : entry.kind === 'domestico' ? 'A remuneração por vínculo de emprego doméstico está fora desta consulta de IBS e CBS.'
+      : 'Identifique primeiro o código nacional e a NBS do serviço.';
+    return;
+  }
+  const key = entry.code.slice(0,2) + '.' + entry.code.slice(2,4) + '|' + entry.nbs;
+  rtcCandidates = rtcCorrelations[key] || [];
+  if (isSimples()) {
+    message.textContent = 'Na competência de 2026, as alíquotas de transição não se aplicam a operações de optantes pelo Simples Nacional, incluindo o MEI. Consulte as regras de 2027 para competências posteriores.';
+    if (rtcCandidates.length) {
+      addField($('rtc-fields'),'Referência técnica do serviço',[...new Set(rtcCandidates.map(x => x[1]))].join(' · ') + ' no Anexo VIII. Sem sugestão de destaque para esta nota do Simples em 2026.');
+    }
+    return;
+  }
+  if (!['Lucro Real','Lucro Presumido'].includes($('regime').value)) {
+    message.textContent = 'Confirme se o prestador está no regime regular de IBS/CBS para usar as alíquotas de 2026.';
+    return;
+  }
+  if (!rtcCandidates.length) {
+    message.textContent = 'O Anexo VIII não traz um par para este item e esta NBS. Consulte o emissor ou a Calculadora de Tributos antes de preencher os códigos de IBS e CBS.';
+    return;
+  }
+  message.textContent = 'Referência para operação interna onerosa na competência de 2026. Use o enquadramento correspondente ao contrato. O recolhimento em 2026 pode ser dispensado quando cumpridas as obrigações acessórias.';
+  $('rtc-choice').hidden = false;
+  rtcCandidates.forEach(([indicator,code,place,description],index) => {
+    rtcOptions.add(new Option(code + ' · ' + (description || rtcRates[code]?.[2] || 'Tratamento específico') + ' · ' + indicator + ' (' + place + ')',String(index)));
+  });
+  if (rtcCandidates.length === 1 && rtcCandidates[0][1] === '000001') rtcOptions.value = '0';
+  updateRtcCalculation();
+}
+rtcOptions.addEventListener('change',updateRtcCalculation);
+rtcBase.addEventListener('input',updateRtcCalculation);
+rtcBase.addEventListener('blur',() => {
+  const base = currencyNumber(rtcBase.value);
+  if (base === 0) rtcBase.value = money.format(0);
+  else formatCurrency(rtcBase,Infinity,'Informe uma base válida em reais, como 1.500,00.');
+  updateRtcCalculation();
+});
+</script>
+<script>
+const backupType = 'mf-fiscal-iss';
+const backupFile = $('iss-backup-file');
+const importButton = $('iss-confirm-import');
+const replaceConflicts = $('iss-backup-replace');
+const backupStatus = $('iss-backup-status');
+let stagedBackup = null;
+let readGeneration = 0;
+
+function parseIssBackup(raw) {
+  const data = JSON.parse(raw);
+  if (data?.type !== backupType || data.version !== 1 || !Array.isArray(data.entries)) {
+    throw new Error('Selecione um backup JSON de alíquotas de ISS exportado pelo MF Nota Certa.');
+  }
+  const incoming = new Map();
+  const payerTypes = municipalRules.map(([type]) => type);
+  for (const [index,entry] of data.entries.entries()) {
+    const city = typeof entry?.city === 'string' ? entry.city.trim() : '';
+    if (!cityPattern.test(city) || !municipalIssCodes.has(entry?.code) ||
+        !Number.isFinite(entry.rate) || entry.rate < 0 || entry.rate > 5 ||
+        typeof entry.basis !== 'string' || !entry.rules || typeof entry.rules !== 'object' ||
+        payerTypes.some(type => !['','apply','exempt'].includes(entry.rules[type] ?? ''))) {
+      throw new Error('Registro ' + (index+1) + ' inválido. Confira município, código, alíquota e regra de retenção.');
+    }
+    const key = registrationKey(city,entry.code);
+    if (incoming.has(key)) throw new Error('O backup tem registros duplicados para ' + city + ' · ' + formatCode(entry.code) + '.');
+    const rules = Object.fromEntries(payerTypes.map(type => [type,entry.rules[type] ?? '']));
+    incoming.set(key,{city,code:entry.code,rate:entry.rate,rules,basis:entry.basis});
+  }
+  return incoming;
+}
+
+$('iss-export').addEventListener('click',() => {
+  const data = {type:backupType,version:1,entries:[...municipalRegistrations.values()]};
+  const file = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(file);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'mf-nota-certa-aliquotas-iss-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+  backupStatus.textContent = data.entries.length + ' registro(s) incluído(s) no backup.';
+});
+
+backupFile.addEventListener('change',async () => {
+  const generation = ++readGeneration;
+  stagedBackup = null;
+  importButton.disabled = true;
+  replaceConflicts.checked = false;
+  replaceConflicts.parentElement.hidden = true;
+  backupStatus.textContent = '';
+  const file = backupFile.files[0];
+  if (!file) return;
+  try {
+    const parsed = parseIssBackup(await file.text());
+    if (generation !== readGeneration) return;
+    stagedBackup = parsed;
+    const conflicts = [...parsed.keys()].filter(key => municipalRegistrations.has(key)).length;
+    backupStatus.textContent = parsed.size + ' registro(s) encontrado(s). ' + conflicts + ' já cadastrado(s) neste navegador.';
+    replaceConflicts.parentElement.hidden = conflicts === 0;
+    importButton.disabled = parsed.size === 0;
+  } catch (error) {
+    if (generation !== readGeneration) return;
+    backupStatus.textContent = error instanceof SyntaxError ? 'O arquivo não contém um JSON válido.' : error.message;
+  }
+});
+
+importButton.addEventListener('click',() => {
+  if (!stagedBackup) return;
+  const next = new Map(municipalRegistrations);
+  let added = 0;
+  let updated = 0;
+  let kept = 0;
+  for (const [key,record] of stagedBackup) {
+    if (!next.has(key)) {
+      next.set(key,record);
+      added++;
+    } else if (replaceConflicts.checked) {
+      next.set(key,record);
+      updated++;
+    } else {
+      kept++;
+    }
+  }
+  if (!saveMunicipalRegistry(next)) {
+    backupStatus.textContent = registryStatus.textContent;
+    return;
+  }
+  backupStatus.textContent = 'Importação concluída. Novos: ' + added + '. Atualizados: ' + updated + '. Mantidos: ' + kept + '.';
+  stagedBackup = null;
+  backupFile.value = '';
+  importButton.disabled = true;
+  replaceConflicts.checked = false;
+  replaceConflicts.parentElement.hidden = true;
+});
+</script>
+<script>
+const printSheet = $('nota-impressao');
+
+function pdfText(id,value) {
+  $(id).textContent = value || 'Não informado';
+}
+
+function pdfReadPairs(target,source) {
+  const to = $(target);
+  to.replaceChildren();
+  const from = $(source);
+  for (const item of from.children) {
+    if (!['DT','DD'].includes(item.tagName)) continue;
+    const node = document.createElement(item.localName);
+    node.textContent = item.textContent;
+    to.append(node);
+  }
+}
+
+function prepareInvoicePreview() {
+  if (result.hidden) return false;
+  const entry = selected();
+  if (entry.code === '—') {
+    $('pdf-status').textContent = 'O cenário selecionado não prevê emissão de NFS-e de serviço.';
+    return false;
+  }
+  $('pdf-status').textContent = '';
+  const issuedMonth = $('pdf-competencia').value;
+  const formattedMonth = /^\d{4}-\d{2}$/.test(issuedMonth) ? issuedMonth.slice(5) + '/' + issuedMonth.slice(0,4) : '';
+  pdfText('print-competencia',formattedMonth);
+  pdfText('print-prestador',$('empresa-nome').value.trim());
+  pdfText('print-prestador-id',$('pdf-prestador-id').value.trim());
+  pdfText('print-prestador-local',$('prestador').value.trim());
+  pdfText('print-regime',$('regime').value);
+  pdfText('print-tomador',$('pdf-tomador').value.trim());
+  pdfText('print-tomador-id',$('pdf-tomador-id').value.trim());
+  pdfText('print-tomador-tipo',$('tomador').value);
+  pdfText('print-cnae',activity.selectedOptions[0]?.text);
+  pdfText('print-local',$('local').value.trim());
+  pdfText('print-contrato',$('contratacao').value);
+  pdfReadPairs('print-servico','dados');
+  pdfText('print-situacao',$('situacao').textContent);
+
+  const gross = currencyNumber($('valor-servico').value);
+  const withholdingCalculated = !$('withholding-panel').hidden && !$('withholding-calculator').hidden;
+  pdfText('print-bruto',gross > 0 && Number.isFinite(gross) ? money.format(gross) : '');
+  pdfText('print-retido',withholdingCalculated ? $('withholding-total').textContent : 'A confirmar');
+  pdfText('print-liquido',withholdingCalculated ? $('withholding-net').textContent : 'A confirmar');
+  pdfText('print-pendencias',withholdingCalculated ? $('withholding-status').textContent : 'Consulte as retenções com o valor bruto informado.');
+  $('print-pendencias').hidden = withholdingCalculated && !$('withholding-status').textContent;
+  const taxes = $('print-tributos');
+  taxes.replaceChildren();
+  $('print-retencoes').hidden = !withholdingCalculated;
+  if (withholdingCalculated) {
+    for (const row of $('withholding-body').rows) {
+      const [status,base,rate] = row.querySelectorAll('select,input');
+      const name = row.cells[0].firstChild.textContent;
+      const amount = row.cells[4].firstChild.textContent;
+      const applying = status.value === 'apply';
+      addTableRow(taxes,[name,status.selectedOptions[0].text,
+        applying && amount !== 'A confirmar' ? money.format(base.value.trim() ? currencyNumber(base.value) : gross) : '—',
+        applying && rate.value.trim() ? rate.value.trim().replace(/%$/,'') + '%' : '—',amount]);
+    }
+  }
+
+  pdfReadPairs('print-rtc-fields','rtc-fields');
+  const rtcYear = issuedMonth ? issuedMonth.slice(0,4) : '2026';
+  const matchingRtc = rtcYear === '2026';
+  if (!matchingRtc) $('print-rtc-fields').replaceChildren();
+  pdfText('print-rtc-message',matchingRtc ? $('rtc-message').textContent : 'A competência informada exige as regras de IBS e CBS do respectivo ano.');
+  const rtcTaxRows = $('print-rtc-values');
+  rtcTaxRows.replaceChildren();
+  const showRtcTotals = matchingRtc && !$('rtc-amounts').hidden;
+  $('print-rtc-table').hidden = !showRtcTotals;
+  if (showRtcTotals) {
+    for (const row of $('rtc-values').rows) addTableRow(rtcTaxRows,[...row.cells].map(cell => cell.textContent));
+  }
+  printSheet.classList.add('ready-to-print');
+  return true;
+}
+
+$('gerar-nota-pdf').addEventListener('click',() => {
+  if (!prepareInvoicePreview()) return;
+  window.print();
+});
+window.addEventListener('afterprint',() => printSheet.classList.remove('ready-to-print'));
+</script>
+</body>
+</html>
