@@ -25,7 +25,7 @@ async function capture() {
       },[first,last]);
       await page.screenshot({path:path.join(dest,name+'.jpg'),fullPage:true,clip:box,quality:94,animations:'disabled',caret:'hide'});
     }
-    await shot('tutorial-logo','.hero','.consulta-modos');
+    await shot('tutorial-logo','.shell','#busca-servico-painel');
     await el('#busca-servico').fill('limpeza de escritório');
     const suggestion=page.getByRole('button',{name:/Limpeza geral de prédio/});
     await suggestion.waitFor();
