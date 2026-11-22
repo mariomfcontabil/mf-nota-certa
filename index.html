@@ -266,6 +266,46 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 #ajuda .ajuda-passos li::marker { color:var(--ouro-texto); font-weight:750 }
 #ajuda details { padding:.65rem 0; border-top:1px solid var(--borda) }
 #ajuda details p { margin:.55rem 0; color:var(--texto-2) }
+
+.ajuda-acoes { align-items:center; gap:.9rem }
+.button-download { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:.65rem 1rem; border-radius:7px; background:var(--ouro-h); color:#201705; font-weight:750; text-decoration:none; text-align:center }
+.button-download:hover { background:#f3ba4d; color:#201705 }
+@media screen {
+  .table-scroll { max-width:100%; scrollbar-width:thin }
+  .workspace,.card,.grid > *, .panel-grid > * { min-width:0 }
+  .brand-text,.tax-table td,.linha span { overflow-wrap:anywhere }
+  .sidebar nav { overflow-y:auto }
+  button,input,select,textarea { max-width:100% }
+}
+@media screen and (max-width:760px) {
+  .sidebar nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); padding:.4rem .7rem .6rem; gap:.35rem; overflow:visible }
+  .sidebar nav a { min-width:0; min-height:44px; white-space:normal }
+  .nav-symbol { flex:none }
+  .topbar-inner { gap:.6rem }
+  .topbar-title { min-width:0; overflow-wrap:anywhere }
+  .withholding-table { display:block; min-width:0; width:100% }
+  .withholding-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap }
+  .withholding-table tbody { display:grid; gap:.7rem }
+  .withholding-table tr { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:.35rem .75rem; padding:.65rem; border:1px solid var(--borda); border-radius:7px }
+  .withholding-table th[scope=row] { grid-column:1/-1; width:auto; padding:0 0 .35rem }
+  .withholding-table td { min-width:0; padding:.25rem 0; border:0 }
+  .withholding-table td::before { content:attr(data-label); display:block; color:var(--texto-2); font-weight:650; font-size:.78rem; margin-bottom:.15rem }
+  .withholding-table td:last-child { grid-column:1/-1 }
+  .withholding-table input,.withholding-table select { min-width:0; width:100%; font-size:16px }
+}
+@media screen and (max-width:520px) {
+  .sidebar nav { width:100% }
+  .actions > button,.ajuda-acoes > .button-download { flex:1 1 100% }
+  .ajuda-acoes > a { min-height:44px; display:inline-flex; align-items:center }
+  .tax-table:not(.withholding-table) { font-size:.79rem }
+  .tax-table:not(.withholding-table) th,.tax-table:not(.withholding-table) td { padding:.38rem .22rem }
+}
+@media screen and (max-width:340px) {
+  .hero { grid-template-columns:minmax(0,1fr) 52px }
+  .hero-mark::before { width:43px }
+  .hero-mark::after { width:34px }
+  .withholding-table tr { grid-template-columns:minmax(0,1fr) }
+}
 </style>
 </head>
 <body>
@@ -439,7 +479,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <div id="withholding-inss-box" hidden><label for="withholding-inss-case">Condição da retenção de INSS</label><select id="withholding-inss-case"><option value="">A confirmar</option><option value="full">Base integral, sem dispensa ou adicional</option><option value="special">Base reduzida ou alíquota específica</option><option value="exempt">Dispensa legal confirmada</option></select><small class="field-hint">Confira as dispensas previdenciárias, materiais, equipamentos e adicionais aplicáveis.</small></div>
 </div>
 <div class="table-scroll">
-<table class="tax-table withholding-table">
+<table class="tax-table withholding-table" role="table">
 <thead><tr><th scope="col">Tributo</th><th scope="col">Situação</th><th scope="col">Base em R$</th><th scope="col">Alíquota %</th><th scope="col">Valor retido</th></tr></thead>
 <tbody id="withholding-body"></tbody>
 </table>
@@ -494,7 +534,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <p id="iss-backup-status" role="status"></p>
 </section>
 <p id="iss-registry-empty">Nenhuma alíquota personalizada cadastrada.</p>
-<div id="iss-registry-table" class="table-scroll" hidden><table class="tax-table withholding-table">
+<div id="iss-registry-table" class="table-scroll" hidden><table class="tax-table withholding-table" role="table">
 <thead><tr><th>Município/UF</th><th>Código</th><th>Alíquota</th><th>Retenção</th><th>Fonte</th><th>Ações</th></tr></thead><tbody id="iss-registry-list"></tbody></table></div>
 </section>
 <section class="card" id="ajuda" aria-labelledby="ajuda-title">
@@ -509,7 +549,10 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </ol>
 <details><summary>O serviço não aparece na lista</summary><p>Abra <b>Matriz fiscal</b> e verifique as opções do CNAE. Se nenhuma corresponder, escolha <b>Outro serviço / preciso confirmar</b> e confira a classificação com a contabilidade antes de emitir.</p></details>
 <details><summary>Quero reaproveitar dados em próximas consultas</summary><p>Em <b>Minha empresa</b>, salve o regime e o município/UF do prestador. Em <b>Cadastro de ISS</b>, cadastre as alíquotas municipais por serviço. Para levar esse cadastro a outro computador, exporte o arquivo JSON e importe no novo navegador.</p></details>
-<div class="actions"><a href="#consulta-nfse">Voltar à consulta</a></div>
+<div class="actions ajuda-acoes">
+<a class="button-download" href="tutorial-mf-nota-certa.pdf" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
+<a href="#consulta-nfse">Voltar à consulta</a>
+</div>
 </section>
 </main>
 </div>
@@ -1936,11 +1979,13 @@ function renderWithholdings(entry, eligible, changedField = '') {
     const amount = document.createElement('span');
     value.append(amount,note);
     row.append(name);
-    for (const field of [status,base,rate]) {
+    for (const [field,label] of [[status,'Situação'],[base,'Base em R$'],[rate,'Alíquota %']]) {
       const cell = document.createElement('td');
+      cell.dataset.label = label;
       cell.append(field);
       row.append(cell);
     }
+    value.dataset.label = 'Valor retido';
     row.append(value);
     rows.append(row);
     return {status,rate,base,amount,note,rule};
@@ -2080,12 +2125,15 @@ function renderMunicipalRegistry() {
     const description = [record.city,formatCode(record.code),percent(record.rate),
       municipalRules.map(([type]) => record.rules[type] ? type + ': ' + (record.rules[type] === 'apply' ? 'reter' : 'sem retenção') : '').filter(Boolean).join(' · ') || 'A confirmar',
       record.basis || '—'];
-    for (const value of description) {
+    const labels = ['Município/UF','Código','Alíquota','Retenção','Fonte'];
+    for (const [index,value] of description.entries()) {
       const cell = document.createElement('td');
+      cell.dataset.label = labels[index];
       cell.textContent = value;
       row.append(cell);
     }
     const actions = document.createElement('td');
+    actions.dataset.label = 'Ações';
     const edit = document.createElement('button');
     edit.type = 'button';
     edit.textContent = 'Editar';
