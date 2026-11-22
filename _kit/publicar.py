@@ -6,6 +6,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from html import escape
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -68,6 +69,25 @@ def build(stage):
         shutil.copyfile(stage / name, ROOT / name)
 
 
+def verify_publication():
+    names = ['index.html', PDF, ZIP, *ARTES]
+    for name in names:
+        expected = (ROOT / name).read_bytes()
+        location = BASE + ('' if name == 'index.html' else name) + version(expected)
+        for attempt in range(30):
+            # Pages pode servir a versão anterior enquanto distribui o novo commit.
+            response = subprocess.run(
+                ['curl', '-fsSL', '--max-time', '15', location + '&check=' + str(time.time_ns())],
+                capture_output=True,
+            )
+            if response.returncode == 0 and response.stdout == expected:
+                break
+            if attempt == 29:
+                raise RuntimeError('Publicação não confirmada para ' + name)
+            time.sleep(4)
+    print('Ajuda, tutorial, kit e duas artes verificados no site público.')
+
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--publicar', action='store_true')
 args = parser.parse_args()
@@ -79,3 +99,4 @@ if args.publicar:
     if subprocess.run(['git','diff','--cached','--quiet','--',*paths], cwd=ROOT).returncode:
         run('git','commit','-m','Atualizar kit de distribuição do MF Nota Certa','--',*paths)
     run('git','push','origin','HEAD:main')
+    verify_publication()

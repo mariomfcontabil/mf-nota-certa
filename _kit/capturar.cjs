@@ -50,6 +50,27 @@ async function capture() {
     await el('#pdf-complementos summary').click();
     await el('#pdf-tomador').fill('Cliente Exemplo');
     await shot('tutorial-painel-5','#pdf-complementos','#gerar-nota-pdf');
+    await el('#modo-simples').click();
+    await el('#busca-servico').fill('limpeza de escritório ');
+    await suggestion.click();
+    await el('#consulta-submit').click();
+    assert.ok(await el('#resultado-simples').isVisible());
+    await el('#busca-servico').fill('pintura');
+    assert.equal(await el('#atividade').inputValue(),'');
+    assert.ok(await el('#resultado-simples').isHidden());
+    for (const width of [320,390,768,1280]) {
+      await page.setViewportSize({width,height:800});
+      const help = await page.evaluate(() => {
+        const section = document.querySelector('#ajuda');
+        return {
+          width:document.documentElement.scrollWidth,
+          downloads:section.querySelectorAll('a[download]').length,
+          first:section.querySelector('a[download]').getBoundingClientRect().top - section.getBoundingClientRect().top,
+        };
+      });
+      assert.ok(help.width <= width && help.first < 500);
+      assert.equal(help.downloads,4);
+    }
   } finally { await browser.close(); }
 }
 capture().catch(error => {console.error(error);process.exitCode=1;});

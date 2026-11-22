@@ -707,6 +707,22 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <section class="card" id="ajuda" aria-labelledby="ajuda-title">
 <h2 id="ajuda-title">Ajuda para preencher a NFS-e</h2>
 <p>Use o MF Nota Certa para preparar e conferir os dados antes de emitir no portal autorizado.</p>
+<div class="actions ajuda-acoes">
+<a class="button-download" href="#consulta-nfse">Voltar à consulta</a>
+<a class="button-download" href="tutorial-mf-nota-certa.pdf?v=04be868bed58" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
+<a class="button-download" href="mf-nota-certa-kit-whatsapp.zip?v=3f77aece8dea" download>Baixar kit WhatsApp (ZIP)</a>
+<a class="button-download" href="arte-quadrada-whatsapp.png?v=0905ba9efa2b" download>Baixar arte quadrada (conversas)</a>
+<a class="button-download" href="arte-vertical-status.png?v=89543cc4e371" download>Baixar arte vertical (Status)</a>
+<button type="button" class="theme-button" id="copiar-whatsapp">Copiar mensagem do WhatsApp</button>
+<small>O kit inclui as duas artes para WhatsApp, o tutorial em PDF e a mensagem pronta para copiar.</small>
+<a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
+</div>
+<p id="whatsapp-copy-status" role="status"></p>
+<textarea id="whatsapp-copy-text" rows="8" readonly hidden aria-label="Mensagem pronta do WhatsApp">Olá! 👋 Na Ajuda do *MF Nota Certa*, toque em *Voltar à consulta* para buscar seu serviço pelo nome. Por lá, você também pode baixar o tutorial em PDF e o kit completo.
+
+https://mariomfcontabil.github.io/mf-nota-certa/#ajuda
+
+*MF Contábil e Sistemas*</textarea>
 <ul class="ajuda-modos">
 <li><strong>Consulta simples.</strong> Use <b>Buscar pelo nome do serviço</b> e digite, por exemplo, “limpeza de escritório”, “pintura predial” ou “troca de mola de porta”. Escolha o resultado que descreve o trabalho realizado. O CNAE e o serviço são preenchidos automaticamente. Toque em <b>Consultar serviço</b>. Você também pode selecionar o CNAE manualmente. Copie o código de tributação nacional e a NBS, se disponíveis. Para ver tributos e preparar o PDF, toque em <b>Continuar na consulta avançada</b>.</li>
 <li><strong>Consulta avançada.</strong> Abra esse modo para preencher os dados da operação, conferir retenções, usar o checklist e gerar a prévia. Siga o passo a passo abaixo.</li>
@@ -720,22 +736,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </ol>
 <details><summary>O serviço não aparece na busca ou na lista</summary><p>Tente uma palavra mais curta, como “limpeza” ou “mola”. Você também pode abrir <b>Matriz fiscal</b> e verificar as opções do CNAE. Se nenhuma corresponder, escolha <b>Outro serviço / preciso confirmar</b> e confira a classificação com a contabilidade antes de emitir.</p></details>
 <details><summary>Quero reaproveitar dados em próximas consultas</summary><p>Em <b>Minha empresa</b>, salve o regime e o município/UF do prestador. Em <b>Cadastro de ISS</b>, cadastre as alíquotas municipais por serviço. Para levar esse cadastro a outro computador, exporte o arquivo JSON e importe no novo navegador.</p></details>
-<div class="actions ajuda-acoes">
-<a class="button-download" href="tutorial-mf-nota-certa.pdf?v=04be868bed58" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
-<a class="button-download" href="mf-nota-certa-kit-whatsapp.zip?v=3f77aece8dea" download>Baixar kit WhatsApp (ZIP)</a>
-<a class="button-download" href="arte-quadrada-whatsapp.png?v=0905ba9efa2b" download>Baixar arte quadrada (conversas)</a>
-<a class="button-download" href="arte-vertical-status.png?v=89543cc4e371" download>Baixar arte vertical (Status)</a>
-<button type="button" class="theme-button" id="copiar-whatsapp">Copiar mensagem do WhatsApp</button>
-<small>O kit inclui as duas artes para WhatsApp, o tutorial em PDF e a mensagem pronta para copiar.</small>
-<a href="#consulta-nfse">Voltar à consulta</a>
-<a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
-</div>
-<p id="whatsapp-copy-status" role="status"></p>
-<textarea id="whatsapp-copy-text" rows="8" readonly hidden aria-label="Mensagem pronta do WhatsApp">Olá! 👋 Na Ajuda do *MF Nota Certa*, toque em *Voltar à consulta* para buscar seu serviço pelo nome. Por lá, você também pode baixar o tutorial em PDF e o kit completo.
 
-https://mariomfcontabil.github.io/mf-nota-certa/#ajuda
-
-*MF Contábil e Sistemas*</textarea>
 </section>
 </main>
 </div>
@@ -3025,7 +3026,18 @@ function searchServices() {
   }
 }
 
-serviceSearch.addEventListener('input',searchServices);
+serviceSearch.addEventListener('input',() => {
+  if (activity.value) {
+    activity.value = '';
+    submitted = false;
+    alerts.replaceChildren();
+    populateServices();
+    $('resultado-simples').hidden = true;
+    updateQuestions();
+    updateProgress();
+  }
+  searchServices();
+});
 serviceSearch.addEventListener('keydown',event => {
   if (event.key === 'Enter' || event.key === 'ArrowDown') {
     event.preventDefault();
