@@ -261,6 +261,11 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 }
 .hero .hero-subtitle { font-weight:700; color:#f2c266; margin-top:.55rem }
 @media print { #nota-impressao .nota-product { color:#59400e; font-weight:bold; margin-bottom:3pt } }
+#ajuda .ajuda-passos { padding-left:1.4rem; margin:1rem 0 }
+#ajuda .ajuda-passos li { padding-left:.3rem; margin:.7rem 0 }
+#ajuda .ajuda-passos li::marker { color:var(--ouro-texto); font-weight:750 }
+#ajuda details { padding:.65rem 0; border-top:1px solid var(--borda) }
+#ajuda details p { margin:.55rem 0; color:var(--texto-2) }
 </style>
 </head>
 <body>
@@ -271,6 +276,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <a href="#consulta-nfse" aria-current="location"><span class="nav-symbol" aria-hidden="true">▤</span>Consulta NFS-e</a>
 <a href="#matriz-fiscal"><span class="nav-symbol" aria-hidden="true">▦</span>Matriz fiscal</a>
 <a href="#cadastro-iss"><span class="nav-symbol" aria-hidden="true">%</span>Cadastro de ISS</a>
+<a href="#ajuda"><span class="nav-symbol" aria-hidden="true">?</span>Ajuda</a>
 </nav>
 </aside>
 <div class="workspace">
@@ -490,6 +496,20 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <p id="iss-registry-empty">Nenhuma alíquota personalizada cadastrada.</p>
 <div id="iss-registry-table" class="table-scroll" hidden><table class="tax-table withholding-table">
 <thead><tr><th>Município/UF</th><th>Código</th><th>Alíquota</th><th>Retenção</th><th>Fonte</th><th>Ações</th></tr></thead><tbody id="iss-registry-list"></tbody></table></div>
+</section>
+<section class="card" id="ajuda" aria-labelledby="ajuda-title">
+<h2 id="ajuda-title">Ajuda para preencher a NFS-e</h2>
+<p>Use o MF Nota Certa para preparar e conferir os dados antes de emitir no portal autorizado.</p>
+<ol class="ajuda-passos">
+<li><strong>Selecione a atividade e o serviço.</strong> Escolha o CNAE cadastrado da empresa e, em seguida, a opção que corresponde ao que foi feito. Na descrição da nota, explique o serviço com suas próprias palavras, conforme o contrato.</li>
+<li><strong>Informe os dados da operação.</strong> Selecione o regime do prestador, o tipo de tomador e a forma de contratação. Preencha o município/UF do estabelecimento e o local da execução. Digite o valor bruto, antes das retenções.</li>
+<li><strong>Clique em Consultar preenchimento.</strong> Confira o código nacional, a NBS e o município do ISS. Se algum campo estiver incompleto, o aviso leva você ao primeiro campo que precisa de atenção.</li>
+<li><strong>Revise os tributos e o valor líquido.</strong> Preencha apenas as pendências indicadas na tabela. No Simples Nacional, informe o RBT12 para a estimativa do DAS. Se houver ISS retido, use o RBT12 de referência que a tela indicar. No IBS/CBS, siga as opções da competência exibida e confira o enquadramento do contrato.</li>
+<li><strong>Gere a prévia e emita a nota.</strong> Abra <b>Dados para a prévia em PDF</b> para completar a identificação das partes. Clique em <b>Gerar PDF da prévia</b>, escolha <b>Salvar como PDF</b> e use o arquivo para conferir o preenchimento. A emissão oficial é feita no portal autorizado.</li>
+</ol>
+<details><summary>O serviço não aparece na lista</summary><p>Abra <b>Matriz fiscal</b> e verifique as opções do CNAE. Se nenhuma corresponder, escolha <b>Outro serviço / preciso confirmar</b> e confira a classificação com a contabilidade antes de emitir.</p></details>
+<details><summary>Quero reaproveitar dados em próximas consultas</summary><p>Em <b>Minha empresa</b>, salve o regime e o município/UF do prestador. Em <b>Cadastro de ISS</b>, cadastre as alíquotas municipais por serviço. Para levar esse cadastro a outro computador, exporte o arquivo JSON e importe no novo navegador.</p></details>
+<div class="actions"><a href="#consulta-nfse">Voltar à consulta</a></div>
 </section>
 </main>
 </div>
@@ -1370,7 +1390,7 @@ const fiscalLinks = [...document.querySelectorAll('.sidebar nav a')];
 function updateNavigation() {
   const active = fiscalLinks.find(link => link.hash === location.hash) || fiscalLinks[0];
   if (active.hash === '#matriz-fiscal') document.querySelector('#matriz').open = true;
-  document.querySelector('#workspace-title').textContent = active.textContent.replace(/^[▤▦%]\s*/, '');
+  document.querySelector('#workspace-title').textContent = active.textContent.replace(/^[▤▦%?]\s*/, '');
   for (const link of fiscalLinks) {
     if (link === active) link.setAttribute('aria-current','location');
     else link.removeAttribute('aria-current');
