@@ -673,7 +673,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </section>
 <section class="card" id="matriz-fiscal"><details id="matriz"><summary>Matriz fiscal das 23 atividades</summary>
 <p>Selecione um serviço na matriz para preencher o CNAE e o enquadramento na consulta.</p>
-<div id="tabela"></div></details></section>
+<p><a href="matriz-fiscal-23-atividades.html">Ver a revisão por atividade e as correlações a confirmar</a></p><div id="tabela"></div></details></section>
 <section class="card" id="cadastro-iss" aria-labelledby="iss-registry-title">
 <h2 id="iss-registry-title">Cadastro de alíquotas de ISS</h2>
 <p>Salve a alíquota municipal por código nacional do serviço. O cadastro fica neste navegador. As retenções do Simples Nacional continuam seguindo a regra do anexo e do RBT12 quando aplicável.</p>
@@ -880,8 +880,8 @@ const matrix = {
       "nbs": "1.0106.11.00",
       "nbsName": "Serviços de instalação de fiação elétrica e componentes",
       "kind": "obra",
-      "note": "Referência para reparo do edifício que inclui reinstalar fiação e componentes. Restrita à intervenção predial descrita.",
-      "review": false
+      "note": "Referência para reparo do edifício que inclui reinstalar fiação e componentes. Restrita à intervenção predial descrita. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     }
   ],
   "4322-3/01": [
@@ -940,8 +940,8 @@ const matrix = {
       "nbs": "1.0106.12.00",
       "nbsName": "Serviços de instalação de alarmes contra incêndio",
       "kind": "obra",
-      "note": "",
-      "review": false
+      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     },
     {
       "name": "Instalação de rede hidráulica de abastecimento para combate a incêndio em obra",
@@ -971,8 +971,8 @@ const matrix = {
       "nbs": "1.0106.90.00",
       "nbsName": "Serviços de instalação não classificados em subposições anteriores",
       "kind": "obra",
-      "note": "Use o código residual após excluir as instalações especificamente classificadas.",
-      "review": false
+      "note": "Use o código residual após excluir as instalações especificamente classificadas. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     }
   ],
   "4330-4/02": [
@@ -982,8 +982,8 @@ const matrix = {
       "nbs": "1.0107.50.00",
       "nbsName": "Serviços de carpintaria e de serralharia",
       "kind": "obra",
-      "note": "Restrito a trabalho de carpintaria ou serralheria. Vidraçaria e outros acabamentos podem ter NBS diferente.",
-      "review": false
+      "note": "Restrito a trabalho de carpintaria ou serralheria. Vidraçaria e outros acabamentos podem ter NBS diferente. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     },
     {
       "name": "Vidraçaria em instalação de portas ou janelas em obra por empreitada",
@@ -991,8 +991,8 @@ const matrix = {
       "nbs": "1.0107.10.00",
       "nbsName": "Serviços de vidraçaria",
       "kind": "obra",
-      "note": "",
-      "review": false
+      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     },
     {
       "name": "Conserto pontual de mola hidráulica de porta, como equipamento isolado",
@@ -1005,7 +1005,7 @@ const matrix = {
     },
     {
       "name": "Instalação avulsa de vidros com material fornecido pelo tomador",
-      "code": "070601",
+      "code": "070602",
       "nbs": "1.0107.10.00",
       "nbsName": "Serviços de vidraçaria",
       "kind": "instalacao",
@@ -1020,8 +1020,8 @@ const matrix = {
       "nbs": "1.0107.20.00",
       "nbsName": "Serviços de gesso e de estuque",
       "kind": "obra",
-      "note": "",
-      "review": false
+      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     }
   ],
   "4330-4/04": [
@@ -1060,12 +1060,12 @@ const matrix = {
       "nbs": "1.0107.40.00",
       "nbsName": "Serviços de revestimento de pisos e de paredes",
       "kind": "obra",
-      "note": "",
-      "review": false
+      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     },
     {
       "name": "Colocação avulsa de revestimento de paredes com material fornecido pelo tomador",
-      "code": "070601",
+      "code": "070602",
       "nbs": "1.0107.40.00",
       "nbsName": "Serviços de revestimento de pisos e de paredes",
       "kind": "instalacao",
@@ -1174,18 +1174,18 @@ const matrix = {
       "nbs": "1.0105.70.00",
       "nbsName": "Serviços de andaimes",
       "kind": "obra",
-      "note": "Restrito à montagem por empreitada. Se a operação for cessão da estrutura, escolha a opção de cessão.",
-      "review": false
+      "note": "Restrito à montagem por empreitada. Se a operação for cessão da estrutura, escolha a opção de cessão. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
+      "review": true
     }
   ],
   "4399-1/04": [
     {
-      "name": "Içamento avulso, carga ou descarga de materiais em canteiro",
+      "name": "Carga ou descarga avulsa de materiais em canteiro",
       "code": "110402",
       "nbs": "1.0601.90.00",
       "nbsName": "Serviços de manuseio de cargas não classificados em subposições anteriores",
       "kind": "operacao",
-      "note": "Para manuseio de carga contratado separadamente, quando não houver NBS específica para a carga. Se o içamento integrar uma etapa de execução de obra, use o código da etapa efetiva.",
+      "note": "Para carga ou descarga contratada separadamente, quando nenhuma NBS mais específica descreve a carga.",
       "review": false
     },
     {
@@ -1204,6 +1204,15 @@ const matrix = {
       "nbsName": "Arrendamento mercantil operacional ou locação de máquinas e equipamentos de construção, sem operador",
       "kind": "locacao",
       "note": "A NBS identifica a locação. Confira separadamente qualquer operação contratada com mão de obra.",
+      "review": false
+    },
+    {
+      "name": "Guindaste e içamento avulso em obra de construção civil",
+      "code": "141404",
+      "nbs": "1.0601.90.00",
+      "nbsName": "Serviços de manuseio de cargas não classificados em subposições anteriores",
+      "kind": "operacao",
+      "note": "Use quando o objeto é içamento em obra. Verifique se há NBS específica para a carga movimentada.",
       "review": false
     }
   ],
@@ -1276,16 +1285,7 @@ const matrix = {
       "nbs": "1.2605.00.00",
       "nbsName": "Serviços domésticos",
       "kind": "domestico",
-      "note": "O código NBS é uma referência de classificação. Remuneração do vínculo doméstico não é operação para NFS-e. Verifique registro e eSocial Doméstico.",
-      "review": false
-    },
-    {
-      "name": "Limpeza residencial contratada de empresa prestadora",
-      "code": "071002",
-      "nbs": "1.1803.10.00",
-      "nbsName": "Serviços gerais de limpeza",
-      "kind": "limpeza",
-      "note": "Use apenas para prestação empresarial. Confira se o cadastro do prestador corresponde à atividade de limpeza.",
+      "note": "O código NBS é uma referência de classificação. Remuneração do vínculo doméstico não é operação para NFS-e. Verifique registro e eSocial Doméstico. Para limpeza empresarial de prédios, consulte a atividade 8121-4/00.",
       "review": false
     }
   ]
@@ -1333,7 +1333,7 @@ const source = {
   domestico: ['LC 150/2015 · artigo 1º, contrato de trabalho doméstico', 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp150.htm']
 };
 const unclassified = {name:'Outro serviço / preciso confirmar', code:'', nbs:'', kind:'pendente', note:'Identifique o objeto do contrato e consulte o município e a tabela NBS antes de preencher os códigos.'};
-const issAtSite = new Set(['0305','0702','0704','0705','0709','0710','0719','1104']);
+const issAtSite = new Set(['0305','0702','0704','0705','0709','0710','0719','1104','1414']);
 const statutoryWithholding = new Set(['0305','0702','0704','0705','0709','0710','0719']);
 const inssKinds = new Set(['obra','operacao','limpeza','manutencao','conserto','profissional','instalacao']);
 const selected = () => matrix[activity.value]?.[service.value] ?? unclassified;
@@ -1550,7 +1550,7 @@ function renderQuickConsultation() {
   if (classified) {
     addField(list,'Código de tributação nacional',formatCode(entry.code) + ' (' + entry.code + ')');
     addField(list,'NBS',entry.nbs ? entry.nbs + ' · ' + entry.nbsName : 'Confirme a NBS para o serviço.');
-    notice.textContent = 'Códigos de referência para o serviço selecionado. Na consulta avançada, você pode conferir tributos, retenções e condições do contrato.';
+    notice.textContent = entry.review ? 'Confirme a NBS antes de emitir. O par não consta do Anexo VIII.' : 'Códigos de referência para o serviço selecionado. Na consulta avançada, você pode conferir tributos, retenções e condições do contrato.';
   } else if (outside) {
     addField(list,'Código de tributação nacional','Não se aplica à NFS-e neste cenário.');
     if (entry.nbs) addField(list,'NBS de referência',entry.nbs + ' · ' + entry.nbsName);
@@ -1560,7 +1560,7 @@ function renderQuickConsultation() {
   }
   if (entry.note) addField(list,'Condição de uso',entry.note);
   if (classified) {
-    const copyFields = [['Código nacional',entry.code],['NBS',entry.nbs]];
+    const copyFields = [['Código nacional',entry.code],['NBS',entry.review ? '' : entry.nbs]];
     for (const [label,value] of copyFields) {
       if (!value) continue;
       const button = document.createElement('button');
@@ -1846,7 +1846,7 @@ function annexFor(entry) {
     if (!Number.isFinite(factor)) return ['','Informe o fator R para definir o Anexo III ou V.'];
     return [factor >= 28 ? 'III' : 'V','Serviço técnico sujeito ao fator R, conforme art. 18, §§ 5º-I e 5º-J. Fator informado ' + percent(factor) + '.'];
   }
-  if (entry.kind === 'locacao') return ['','A locação pura deve ser segregada na apuração do Simples sem a parcela do ISS. Esta simulação é para prestação de serviços.'];
+  if (entry.kind === 'locacao') return ['','A locação pura de bens móveis segue o Anexo III (LC 123, art. 18, § 5º-A) e deve ser segregada na apuração do Simples sem a parcela do ISS. Esta simulação é para prestação de serviços.'];
   if (entry.kind === 'domestico') return ['','O vínculo doméstico tem tratamento próprio.'];
   return ['','Confirme o objeto do contrato para definir o anexo.'];
 }
@@ -2130,8 +2130,7 @@ function withholdingRules(entry,gross) {
   const labor = contract === 'Disponibilização de mão de obra ao tomador';
   const partial = contract === 'Empreitada parcial ou subempreitada';
   const resultContract = contract === 'Serviço contratado por resultado';
-  const repair = ['conserto','manutencao','instalacao'].includes(entry.kind);
-  const technical = ['070101','071901'].includes(entry.code);
+  const technical = ['070101','071901','170101'].includes(entry.code);
   const buildingCleaning = entry.code === '071002';
   const inferredFederal = ['limpeza','manutencao'].includes(entry.kind) || technical ||
     (labor && ['obra','operacao','instalacao'].includes(entry.kind));
@@ -2147,14 +2146,14 @@ function withholdingRules(entry,gross) {
   const iss = autoIssWithholding(entry, individual, normalRegime);
 
   const normalInss = !individual && regime !== 'MEI' && (normalRegime || annex === 'Anexo IV') &&
-    (entry.kind === 'limpeza' && (labor || partial) || entry.code === '071301' && payer === 'Pessoa jurídica privada' && resultContract);
+    ((entry.kind === 'limpeza' || entry.kind === 'obra') && (labor || partial) || entry.code === '071301' && payer === 'Pessoa jurídica privada' && resultContract);
   $('withholding-inss-box').hidden = !normalInss;
   const condition = $('withholding-inss-case').value;
   const cprb = $('cprb').value;
   const inssRate = cprb === 'Sim, comprovada' ? '3,50' : cprb === 'Não' ? '11,00' : '';
-  const belowInssMinimum = Math.round(gross * 11) < 1000;
+  const belowInssMinimum = condition === 'full' && inssRate && Math.round(gross * Number(inssRate.replace(',','.'))) < 1000;
   let inss = ask('INSS','Confirme o tipo de contratação, a incidência previdenciária e o destaque antes de calcular.');
-  if (individual || regime === 'MEI' || (simple && ['Anexo III','Anexo V'].includes(annex) && !labor) || (repair && resultContract) || (technical && resultContract)) {
+  if (individual || regime === 'MEI' || (simple && ['Anexo III','Anexo V'].includes(annex) && !labor) || (entry.kind === 'conserto' && resultContract) || (technical && resultContract)) {
     inss = omit('INSS','Sem retenção previdenciária na hipótese usual do serviço e da contratação informados.');
   } else if (normalInss) {
     if (condition === 'exempt' || belowInssMinimum) inss = omit('INSS',belowInssMinimum ? 'Dispensa de valor mínimo por documento na regra geral.' : 'Dispensa legal informada.');
@@ -2868,7 +2867,7 @@ function refreshInvoiceChecklist() {
   addChecklistField('Código de tributação nacional',codeReady ? formatCode(entry.code) : '',
     codeReady ? 'Copiar leva os seis dígitos.' : 'Confira o serviço e a forma de contratação.',codeReady ? 'Preencher' : 'Confirmar',entry.code);
   addChecklistField('Código municipal','','Confira o código correspondente no emissor, quando exigido.');
-  addChecklistField('NBS',codeReady ? entry.nbs : '',codeReady ? entry.nbsName : 'Confira o código nacional antes de usar a NBS.');
+  addChecklistField('NBS',codeReady && !entry.review ? entry.nbs : '',entry.review ? entry.note : codeReady ? entry.nbsName : 'Confira o código nacional antes de usar a NBS.');
   addChecklistField('Descrição do serviço',$('servico').value.trim());
   const gross = displayMoney($('valor-servico').value);
   addChecklistField('Valor bruto do serviço',gross,gross ? '' : 'Informe o valor bruto no formulário e consulte novamente.');

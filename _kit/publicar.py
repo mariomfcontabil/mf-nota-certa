@@ -70,7 +70,7 @@ def build(stage):
 
 
 def verify_publication():
-    names = ['index.html', PDF, ZIP, *ARTES]
+    names = ['index.html', 'matriz-fiscal-23-atividades.html', PDF, ZIP, *ARTES]
     for name in names:
         expected = (ROOT / name).read_bytes()
         location = BASE + ('' if name == 'index.html' else name) + version(expected)
@@ -94,7 +94,7 @@ args = parser.parse_args()
 with TemporaryDirectory() as tmp:
     build(Path(tmp))
 if args.publicar:
-    paths = ['_kit', PDF, ZIP, *ARTES, 'index.html']
+    paths = ['_kit', PDF, ZIP, *ARTES, 'index.html', 'matriz-fiscal-23-atividades.html']
     run('git', 'add', '--', *paths)
     if subprocess.run(['git','diff','--cached','--quiet','--',*paths], cwd=ROOT).returncode:
         run('git','commit','-m','Atualizar kit de distribuição do MF Nota Certa','--',*paths)
