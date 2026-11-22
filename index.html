@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -349,6 +349,86 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 #busca-servico-resultados button:hover { background:var(--hover); border-color:var(--ouro) }
 #busca-servico-resultados button span { display:block; color:var(--texto-2); font-size:.82rem; font-weight:500; margin-top:.15rem }
 @media screen and (max-width:520px) { #busca-servico { font-size:16px } }
+@media screen {
+  :root {
+    --accent-fill:#efba63;
+    --accent-hover:#f7cc86;
+    --accent-ink:#271909;
+    --accent-edge:#c19554;
+  }
+  :root[data-theme="light"] {
+    --fundo:#f5f4f1;
+    --superficie:#fff;
+    --superficie-alt:#faf9f6;
+    --hover:#f2efe8;
+    --borda:#e5e1da;
+    --borda-input:#a69e92;
+    --texto-1:#25231e;
+    --texto-2:#615d55;
+    --ouro:#986421;
+    --ouro-h:#a86b22;
+    --ouro-texto:#804b15;
+    --ouro-bg:#fbf0df;
+    --sombra:#2c21100b;
+    --accent-fill:#8b541a;
+    --accent-hover:#714210;
+    --accent-ink:#fff;
+    --accent-edge:#dec6a3;
+  }
+  body { font-size:.94rem }
+  .sidebar { background:var(--superficie); color:var(--texto-1); border-color:var(--borda) }
+  .brand { border-color:var(--borda); text-decoration:none; padding-inline:1.1rem }
+  .brand img,.hero-mark img { filter:none }
+  .brand-text { color:var(--texto-1) }
+  .brand-text small { color:var(--texto-2) }
+  .sidebar nav { padding:1rem .85rem; gap:.35rem }
+  .sidebar nav a { color:var(--texto-2); border:1px solid transparent; border-radius:8px }
+  .sidebar nav a:hover { background:var(--hover); color:var(--texto-1) }
+  .sidebar nav a[aria-current="location"] { background:var(--ouro-bg); border-color:var(--accent-edge); color:var(--ouro-texto); box-shadow:none }
+  .nav-symbol { color:inherit }
+  main,.topbar-inner { width:min(1360px,100%); padding-inline:clamp(.9rem,3vw,2.2rem) }
+  .hero {
+    min-height:0; grid-template-columns:minmax(0,1fr) auto; padding:1.1rem 1.35rem;
+    background:var(--superficie); color:var(--texto-1); border:1px solid var(--borda);
+    border-radius:12px; box-shadow:0 2px 7px var(--sombra);
+  }
+  .hero::before,.hero-mark::before,.hero-mark::after { content:none }
+  .hero h1 { color:var(--texto-1); font-size:clamp(1.55rem,3vw,2rem); line-height:1.18 }
+  .hero p { color:var(--texto-2); margin-top:.35rem; font-size:.93rem }
+  .hero .hero-subtitle { color:var(--ouro-texto); font-weight:700; margin:0 0 .3rem }
+  .hero-mark { min-height:0 }
+  .hero-mark img { width:75px }
+  .card { border-radius:12px; box-shadow:0 2px 7px var(--sombra) }
+  .panel-heading { background:var(--superficie) }
+  .panel-heading h2 { font-size:1.1rem }
+  .consulta-modos { max-width:27rem; gap:.25rem; padding:.22rem; background:var(--fundo); border:1px solid var(--borda); border-radius:10px }
+  .consulta-modos button { border-color:transparent; background:transparent }
+  .consulta-modos button:hover { background:var(--hover) }
+  .consulta-modos button[aria-pressed=true] {
+    color:var(--ouro-texto); background:var(--superficie); border-color:var(--accent-edge);
+    box-shadow:0 1px 3px var(--sombra);
+  }
+  .service-fields { border:1px solid var(--borda); background:var(--superficie-alt); border-radius:9px }
+  .service-fields input,.service-fields select,.service-fields textarea,#busca-servico { background-color:var(--superficie) }
+  button[type=submit],#gerar-nota-pdf,#resultado-simples #continuar-avancada,.button-download {
+    background:var(--accent-fill); color:var(--accent-ink); border-color:transparent; box-shadow:none;
+  }
+  button[type=submit]:hover,#gerar-nota-pdf:hover,#resultado-simples #continuar-avancada:hover,.button-download:hover {
+    background:var(--accent-hover); color:var(--accent-ink);
+  }
+  .tax-table thead th { background:var(--superficie-alt) }
+  .panel-aside .card { padding:1.05rem }
+}
+@media screen and (max-width:760px) {
+  .sidebar nav { width:100%; padding:.2rem .85rem .75rem }
+  .brand { border-bottom:0 }
+  .hero { padding:.85rem 1rem }
+  .hero-mark img { width:56px }
+}
+@media screen and (max-width:380px) {
+  .hero-mark img { width:42px }
+  .consulta-modos button { padding-inline:.3rem }
+}
 </style>
 </head>
 <body>
@@ -367,15 +447,15 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <span class="topbar-title">Fiscal <span aria-hidden="true">/</span> <strong id="workspace-title">Consulta NFS-e</strong></span>
 <div class="topbar-actions">
 <a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
-<button type="button" class="theme-button" id="theme">Modo claro</button>
+<button type="button" class="theme-button" id="theme">Modo escuro</button>
 </div>
 </div></header>
 <main id="consulta-nfse">
 <div class="hero" aria-labelledby="page-title">
 <div>
-<h1 id="page-title">MF Nota Certa</h1>
-<p class="hero-subtitle">Guia de preenchimento da NFS-e</p>
-<p class="intro">Escolha o CNAE e o serviço realizado para consultar os códigos da nota e conferir as retenções aplicáveis.</p>
+<p class="hero-subtitle">MF Nota Certa</p>
+<h1 id="page-title">Guia de preenchimento da NFS-e</h1>
+<p class="intro">Busque pelo nome do serviço ou selecione a atividade (CNAE).</p>
 </div>
 <div class="hero-mark"><img src="mf-ativo-1.webp" width="640" height="548" alt="Brasão da MF Contábil e Sistemas"></div>
 </div>
@@ -1603,9 +1683,9 @@ function setTheme(theme) {
   themeButton.textContent = theme === 'light' ? 'Modo escuro' : 'Modo claro';
 }
 try {
-  setTheme(localStorage.getItem('mf-fiscal-theme') === 'light' ? 'light' : 'dark');
+  setTheme(localStorage.getItem('mf-fiscal-theme') === 'dark' ? 'dark' : 'light');
 } catch {
-  setTheme('dark');
+  setTheme('light');
 }
 themeButton.addEventListener('click', () => {
   const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
