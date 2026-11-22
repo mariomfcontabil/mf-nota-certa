@@ -320,6 +320,18 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 @media screen and (max-width:340px) {
   .topbar-actions .whatsapp-mf { flex:1 1 100% }
 }
+#checklist-nfse,#invoice-memory { margin:1rem 0; padding:clamp(.7rem,2vw,1rem); border:1px solid var(--borda); border-radius:7px; background:var(--fundo) }
+#checklist-nfse h3 { margin:0 0 .5rem }
+#invoice-memory summary { margin-bottom:.5rem }
+#invoice-memory table a { display:block; margin-top:.25rem; overflow-wrap:anywhere }
+#invoice-memory th,#invoice-memory td,#checklist-nfse th,#checklist-nfse td { vertical-align:top }
+#checklist-nfse button { background:var(--superficie-alt); color:var(--texto-1); border-color:var(--borda-input); font-size:.85rem; min-height:38px }
+#checklist-nfse td[data-state=Confirmar] { color:var(--ouro-texto); font-weight:700 }
+#checklist-nfse td[data-state="Não se aplica"] { color:var(--texto-2) }
+@media screen and (max-width:970px) {
+  #checklist-nfse td[data-label="O que informar"], #invoice-memory td[data-label="Regra e fonte"] { grid-column:1/-1 }
+  #checklist-nfse td:empty { display:none }
+}
 </style>
 </head>
 <body>
@@ -446,6 +458,23 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 </div>
 <section id="resultado" class="card" hidden aria-labelledby="resultado-titulo">
 <h2 id="resultado-titulo" tabindex="-1">Como preencher a NFS-e</h2>
+<section id="checklist-nfse" aria-labelledby="checklist-title">
+<h3 id="checklist-title">Checklist para preencher a nota</h3>
+<p id="checklist-note"></p>
+<div class="table-scroll" id="checklist-wrap"><table class="tax-table withholding-table" role="table">
+<thead><tr><th scope="col">Campo</th><th scope="col">O que informar</th><th scope="col">Situação</th><th scope="col">Ação</th></tr></thead>
+<tbody id="invoice-checklist-rows"></tbody></table></div>
+<p id="checklist-copy-status" class="field-hint" role="status"></p>
+<textarea id="checklist-copy-fallback" readonly hidden rows="2" aria-label="Texto para copiar"></textarea>
+</section>
+<details id="invoice-memory" open>
+<summary>Memória de cálculo dos tributos</summary>
+<p>Confira a base e a alíquota usadas, o valor encontrado e a fonte da regra.</p>
+<p id="invoice-memory-empty">Complete os dados da consulta para exibir a memória de cálculo.</p>
+<div class="table-scroll"><table class="tax-table withholding-table" role="table">
+<thead><tr><th scope="col">Tributo</th><th scope="col">Base</th><th scope="col">Alíquota</th><th scope="col">Valor</th><th scope="col">Regra e fonte</th></tr></thead>
+<tbody id="invoice-memory-rows"></tbody></table></div>
+</details>
 <p id="situacao" class="pending"></p>
 <dl id="dados"></dl>
 <section id="simples-result" aria-labelledby="simples-result-title" hidden>
@@ -1413,6 +1442,9 @@ form.addEventListener('submit', event => {
   renderSimples();
   renderRtc(selected());
   result.hidden = false;
+  $('checklist-copy-status').textContent = '';
+  $('checklist-copy-fallback').hidden = true;
+  refreshInvoiceChecklist();
   document.querySelector('#resultado-titulo').focus();
 });
 form.addEventListener('input', () => {
@@ -2483,6 +2515,210 @@ $('gerar-nota-pdf').addEventListener('click',() => {
   window.print();
 });
 window.addEventListener('afterprint',() => printSheet.classList.remove('ready-to-print'));
+</script>
+<script>
+const checklistBody = $('invoice-checklist-rows');
+const memoryBody = $('invoice-memory-rows');
+const checkoutStatus = $('checklist-copy-status');
+const fiscalNote = $('checklist-note');
+const printableFields = ['empresa-nome','pdf-competencia','pdf-prestador-id','pdf-tomador','pdf-tomador-id'];
+
+function fiscalPair(list,name) {
+  const labels = [...$(list).querySelectorAll('dt')];
+  return labels.find(label => label.textContent === name)?.nextElementSibling?.textContent || '';
+}
+
+function displayMoney(input) {
+  const value = currencyNumber(input);
+  return Number.isFinite(value) && value >= 0 ? money.format(value) : '';
+}
+
+async function copyInvoiceField(value,label) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(value);
+    checkoutStatus.textContent = label + ' copiado.';
+  } catch {
+    const area = $('checklist-copy-fallback');
+    area.hidden = false;
+    area.value = value;
+    area.focus();
+    area.select();
+    checkoutStatus.textContent = 'Copie manualmente o texto selecionado.';
+  }
+}
+
+function addChecklistField(label,value,detail='',state=value ? 'Preencher' : 'Confirmar',copy=value) {
+  const row = document.createElement('tr');
+  for (const [heading,text] of [['Campo',label],['O que informar',value],['Situação',state],['Ação','']]) {
+    const cell = document.createElement(heading === 'Campo' ? 'th' : 'td');
+    if (heading === 'Campo') cell.scope = 'row';
+    cell.dataset.label = heading;
+    cell.textContent = text || (heading === 'O que informar' ? '—' : '');
+    row.append(cell);
+  }
+  row.cells[2].dataset.state = state;
+  if (detail) {
+    const note = document.createElement('small');
+    note.textContent = detail;
+    row.cells[1].append(note);
+  }
+  if (copy && state === 'Preencher') {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = 'Copiar';
+    button.setAttribute('aria-label','Copiar ' + label);
+    button.addEventListener('click',() => copyInvoiceField(copy,label));
+    row.cells[3].append(button);
+  }
+  checklistBody.append(row);
+}
+
+function taxReferences(name,entry) {
+  const payer = $('tomador').value;
+  if (name === 'ISS') {
+    const city = issMunicipality(entry);
+    if (isSimples()) return ['cgsnIss','iss'];
+    if (registeredMunicipalIss(city,entry.code)) return ['iss'];
+    return municipalIssRate(entry) !== undefined ? ['altamira','iss'] : ['iss'];
+  }
+  if (name === 'INSS') return $('cprb').value === 'Sim, comprovada' ? ['inss','cprb'] : ['inss'];
+  if (payer === 'Órgão ou entidade pública') return ['public'];
+  if (name === 'IRRF') return isSimples() ? ['irSimples'] : ['ir'];
+  return ['csrf','csrfIN'];
+}
+
+function addMemoryRow(name,base,rate,amount,detail,refs) {
+  const row = document.createElement('tr');
+  for (const [label,value] of [['Tributo',name],['Base',base],['Alíquota',rate],['Valor',amount],['Regra e fonte','']]) {
+    const cell = document.createElement(label === 'Tributo' ? 'th' : 'td');
+    if (label === 'Tributo') cell.scope = 'row';
+    cell.dataset.label = label;
+    cell.textContent = value || (label === 'Regra e fonte' ? '' : '—');
+    row.append(cell);
+  }
+  if (detail) {
+    const p = document.createElement('p');
+    p.textContent = detail;
+    row.cells[4].append(p);
+  }
+  for (const key of refs) {
+    const [title,url] = typeof key === 'string' ? source[key] : key;
+    const link = document.createElement('a');
+    link.href = url;
+    link.textContent = title;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    row.cells[4].append(link);
+  }
+  memoryBody.append(row);
+}
+
+function refreshInvoiceChecklist() {
+  if (result.hidden) return;
+  checklistBody.replaceChildren();
+  memoryBody.replaceChildren();
+  const entry = selected();
+  const noInvoice = entry.code === '—';
+  fiscalNote.textContent = noInvoice ? 'Este cenário está fora da emissão de NFS-e de serviços. Confira o tratamento indicado no resultado.' :
+    'Confira os dados antes de preencher no emissor. Alguns municípios usam rótulos ou campos adicionais.';
+  $('checklist-wrap').hidden = noInvoice;
+  $('invoice-memory').hidden = noInvoice;
+  if (noInvoice) return;
+  const competence = $('pdf-competencia').value;
+  addChecklistField('Competência',competence ? competence.slice(5) + '/' + competence.slice(0,4) : '',
+    'Informe o mês da prestação no emissor. Você pode registrá-lo em Dados para a prévia em PDF.');
+  addChecklistField('Prestador', $('empresa-nome').value.trim(),'Use a razão social do estabelecimento prestador.');
+  addChecklistField('CPF/CNPJ do prestador',$('pdf-prestador-id').value.trim(),'Disponível em Dados para a prévia em PDF.');
+  addChecklistField('Município do prestador',$('prestador').value.trim());
+  addChecklistField('Regime tributário',$('regime').value);
+  addChecklistField('Tipo de tomador',$('tomador').value);
+  addChecklistField('Nome do tomador',$('pdf-tomador').value.trim(),'Complete a identificação em Dados para a prévia em PDF.');
+  addChecklistField('CPF/CNPJ do tomador',$('pdf-tomador-id').value.trim(),'Confira a identificação exigida pelo emissor.');
+  addChecklistField('Município da execução',$('local').value.trim());
+  const codeReady = /^\d{2}\.\d{2}\.\d{2}/.test(fiscalPair('dados','Código de tributação nacional'));
+  addChecklistField('Código de tributação nacional',codeReady ? formatCode(entry.code) : '',
+    codeReady ? 'Copiar leva os seis dígitos.' : 'Confira o serviço e a forma de contratação.',codeReady ? 'Preencher' : 'Confirmar',entry.code);
+  addChecklistField('Código municipal','','Confira o código correspondente no emissor, quando exigido.');
+  addChecklistField('NBS',codeReady ? entry.nbs : '',codeReady ? entry.nbsName : 'Confira o código nacional antes de usar a NBS.');
+  addChecklistField('Descrição do serviço',$('servico').value.trim());
+  const gross = displayMoney($('valor-servico').value);
+  addChecklistField('Valor bruto do serviço',gross,gross ? '' : 'Informe o valor bruto no formulário e consulte novamente.');
+  const calcReady = !$('withholding-panel').hidden && !$('withholding-calculator').hidden;
+  if (calcReady) {
+    for (const row of $('withholding-body').rows) {
+      const name = row.cells[0].firstChild.textContent;
+      const explanation = row.cells[0].querySelector('small')?.textContent || '';
+      const [status,base,rate] = row.querySelectorAll('select,input');
+      const amount = row.cells[4].firstChild.textContent;
+      const issue = row.cells[4].querySelector('small')?.textContent || '';
+      const state = status.value === 'exempt' ? 'Não se aplica' : amount === 'A confirmar' ? 'Confirmar' : 'Preencher';
+      const rateText = status.value === 'apply' && rate.value.trim() && rate.getAttribute('aria-invalid') !== 'true' ?
+        rate.value.trim().replace(/%$/,'').trim() + '%' : '';
+      const baseText = status.value === 'apply' && base.getAttribute('aria-invalid') !== 'true' ?
+        base.value.trim() ? displayMoney(base.value) : base.placeholder.startsWith('R$') ? gross : '' : '';
+      const refs = taxReferences(name,entry);
+      const municipal = name === 'ISS' && entry.code ? registeredMunicipalIss(issMunicipality(entry),entry.code) : null;
+      const formula = state === 'Preencher' ? baseText + ' × ' + rateText + ' = ' + amount + '. ' : '';
+      let context = issue || explanation;
+      if (status.dataset.edited || rate.dataset.edited || base.value.trim()) context = 'Revise com os dados informados na retenção. ' + context;
+      if (municipal) context += ' Cadastro de ISS: ' + municipal.city + (municipal.basis ? ' · ' + municipal.basis : '') + '.';
+      addChecklistField(name + ' retido',state === 'Preencher' ? amount : '',
+        state === 'Confirmar' ? context : state === 'Não se aplica' ? 'Sem retenção nesta consulta.' : '',state);
+      addMemoryRow(name + ' retido',baseText,rateText,amount,formula + context,refs);
+    }
+  } else {
+    addChecklistField('Retenções','','Informe o valor bruto e confirme o enquadramento do serviço para consultar as retenções.');
+  }
+
+  const rtcCode = fiscalPair('rtc-fields','Classificação tributária (cClassTrib)').match(/^\d{6}/)?.[0];
+  const rtcPeriod = !competence || competence.startsWith('2026-');
+  if (!rtcPeriod) {
+    addChecklistField('IBS e CBS','','Consulte as regras da competência informada. Este módulo usa a referência de 2026.');
+  } else if (isSimples()) {
+    addChecklistField('IBS e CBS','', $('rtc-message').textContent,'Não se aplica');
+  } else if (rtcCode) {
+    addChecklistField('CST de IBS/CBS',fiscalPair('rtc-fields','CST do IBS/CBS'));
+    addChecklistField('cClassTrib de IBS/CBS',rtcCode);
+    addChecklistField('Indicador de operação (cIndOp)',fiscalPair('rtc-fields','Indicador da operação (cIndOp)'));
+    if (!$('rtc-amounts').hidden) {
+      const refs = ['rtc',['LC 214/2025 · arts. 12 e 343 a 348','https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214compilado.htm']];
+      for (const row of $('rtc-values').rows) {
+        const [name,rate,amount] = [...row.cells].map(cell => cell.textContent);
+        const base = displayMoney($('rtc-base').value);
+        const ready = Boolean(base);
+        addChecklistField(name + ' estimado',ready ? amount : '',ready ? 'Estimativa para conferência no emissor.' : 'Informe a base de IBS/CBS.',ready ? 'Preencher' : 'Confirmar');
+        addMemoryRow(name + ' estimado',base,rate,amount,ready ? base + ' × ' + rate + ' = ' + amount + '.' : 'Informe a base do IBS/CBS.',refs);
+      }
+    } else {
+      addChecklistField('Alíquotas de IBS/CBS','','Confira no emissor as alíquotas, reduções e condições da classificação selecionada.');
+    }
+  } else {
+    addChecklistField('IBS e CBS','',$('rtc-message').textContent);
+  }
+  const net = calcReady ? $('withholding-net').textContent : '';
+  const netReady = net.startsWith('R$');
+  addChecklistField('Valor líquido a receber',netReady ? net : '',netReady ? 'Valor bruto menos retenções calculadas.' : $('withholding-status').textContent || 'Confira as retenções pendentes.');
+  if (!$('simples-result').hidden && !$('das-table').hidden) {
+    for (const row of $('das-body').rows) {
+      const [name,rate,amount] = [...row.cells].map(cell => cell.textContent);
+      if (name === 'Total estimado') continue;
+      const separate = rate === 'Fora do DAS';
+      addMemoryRow(name + ' · estimativa DAS',separate ? '' : gross,rate,amount,
+        separate ? 'Apuração separada da contribuição previdenciária.' : 'Alíquota efetiva repartida no anexo. Estimativa da consulta, sem abatimento de retenções.', ['simples']);
+    }
+  }
+  $('invoice-memory-empty').hidden = memoryBody.rows.length > 0;
+}
+
+const invoiceUpdates = new MutationObserver(refreshInvoiceChecklist);
+for (const id of ['withholding-body','withholding-status','rtc-fields','rtc-values','das-body']) {
+  invoiceUpdates.observe($(id),{childList:true,subtree:true,characterData:true});
+}
+for (const id of printableFields) {
+  $(id).addEventListener('input',refreshInvoiceChecklist);
+  $(id).addEventListener('change',refreshInvoiceChecklist);
+}
 </script>
 </body>
 </html>
