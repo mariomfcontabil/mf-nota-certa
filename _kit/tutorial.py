@@ -1,4 +1,5 @@
-from config import BASE, PDF_URL, ASSETS, ROOT
+from config import BASE, ROOT
+from os import environ
 from pathlib import Path
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
@@ -24,7 +25,8 @@ base=BASE
 logo=Image.open(ROOT / 'mf-ativo-1.webp').convert('RGBA')
 logo=logo.crop(logo.getbbox())
 logo.thumbnail((190,155),Image.Resampling.LANCZOS)
-images=[Image.open(ASSETS / f'tutorial-painel-{i}.jpg') for i in range(6)]
+ASSETS=Path(environ["MF_CAPTURAS"])
+images={i:Image.open(ASSETS / f'tutorial-painel-{i}.jpg') for i in (0,1,2,4,5)}
 
 def para(text,y,size=12,leading=17,color=ink):
     p=Paragraph(text,ParagraphStyle('guide',fontName='Helvetica',fontSize=size,leading=leading,textColor=color,spaceAfter=0))
@@ -64,7 +66,7 @@ y=header('MF Nota Certa','Guia rápido de preenchimento da NFS-e')
 y=para('<b>Tela principal</b>',y,18,23)-12
 y=para('Ao abrir o MF Nota Certa, você verá o <b>logo da MF</b> em destaque no cabeçalho e poderá escolher o modo de consulta.',y)-12
 home=Image.open(ASSETS / 'tutorial-logo.jpg')
-y=picture(home.crop((0,0,home.width-15,home.height)),y)-18
+y=picture(home,y)-18
 y=para('<b>Consulta simples</b> para buscar pelo nome do serviço e conferir os códigos.',y)-9
 y=para('<b>Consulta avançada</b> para preencher os dados da operação, conferir os tributos e gerar a prévia da nota.',y)
 assert y>=52,y

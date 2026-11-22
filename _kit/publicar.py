@@ -25,7 +25,10 @@ def version(data):
 
 
 def build(stage):
-    run(sys.executable, KIT / 'tutorial.py', cwd=stage)
+    captures = stage / 'imagens'
+    run('node', KIT / 'capturar.cjs', captures, cwd=stage)
+    run(sys.executable, KIT / 'tutorial.py', cwd=stage,
+        env=dict(os.environ, MF_CAPTURAS=str(captures)))
     pdf = (stage / PDF).read_bytes()
     suffix = version(pdf)
     url = BASE + PDF + suffix

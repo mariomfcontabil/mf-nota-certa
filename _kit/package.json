@@ -1,1 +1,1 @@
-{"private":true,"dependencies":{"jsqr":"1.4.0","pngjs":"7.0.0"}}
+{"private":true,"dependencies":{"jsqr":"1.4.0","playwright-core":"1.65.1","pngjs":"7.0.0"}}
