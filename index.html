@@ -308,6 +308,18 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
   .hero-mark::after { width:34px }
   .withholding-table tr { grid-template-columns:minmax(0,1fr) }
 }
+
+.topbar-actions { display:flex; align-items:center; justify-content:flex-end; gap:.55rem; min-width:0 }
+.whatsapp-mf { display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:44px; padding:.5rem .72rem; border:1px solid #347548; border-radius:7px; background:#d8f4de; color:#17442a; font-size:.875rem; font-weight:720; text-decoration:none; line-height:1.25 }
+.whatsapp-mf:hover { background:#bde9c7; color:#133b23 }
+@media screen and (max-width:600px) {
+  .topbar-inner { flex-wrap:wrap }
+  .topbar-actions { width:100%; justify-content:initial; flex-wrap:wrap }
+  .topbar-actions .whatsapp-mf { flex:1 1 auto }
+}
+@media screen and (max-width:340px) {
+  .topbar-actions .whatsapp-mf { flex:1 1 100% }
+}
 </style>
 </head>
 <body>
@@ -324,7 +336,10 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <div class="workspace">
 <header class="topbar"><div class="topbar-inner">
 <span class="topbar-title">Fiscal <span aria-hidden="true">/</span> <strong id="workspace-title">Consulta NFS-e</strong></span>
+<div class="topbar-actions">
+<a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
 <button type="button" class="theme-button" id="theme">Modo claro</button>
+</div>
 </div></header>
 <main id="consulta-nfse">
 <div class="hero" aria-labelledby="page-title">
@@ -554,6 +569,7 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <div class="actions ajuda-acoes">
 <a class="button-download" href="tutorial-mf-nota-certa.pdf" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
 <a href="#consulta-nfse">Voltar à consulta</a>
+<a class="whatsapp-mf" href="https://wa.me/5591992129940?text=Ol%C3%A1%21%20Estou%20usando%20o%20MF%20Nota%20Certa%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20preenchimento%20da%20minha%20Nota%20Fiscal%20de%20Servi%C3%A7o%20%28NFS-e%29.%20Podem%20me%20ajudar%3F" target="_blank" rel="noopener noreferrer">Falar com a MF no WhatsApp</a>
 </div>
 </section>
 </main>
