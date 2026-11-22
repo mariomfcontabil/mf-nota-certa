@@ -25,6 +25,7 @@ def version(data):
     return '?v=' + hashlib.sha256(data).hexdigest()[:12]
 
 
+CONTRATOS = tuple('contrato-' + slug + '.jpg' for slug in ('instalacao','vidracaria','reforma'))
 ARTES = ('arte-quadrada-whatsapp.png', 'arte-vertical-status.png')
 
 
@@ -65,12 +66,14 @@ def build(stage):
                           lambda m: m[1] + escape(message.rstrip()) + m[2], html, flags=re.S)
     assert count == 1 and 'id="ajuda"' in html
     (stage / 'index.html').write_text(html)
+    for name in CONTRATOS:
+        shutil.copyfile(captures / name, ROOT / name)
     for name in (PDF, ZIP, *ARTES, 'index.html'):
         shutil.copyfile(stage / name, ROOT / name)
 
 
 def verify_publication():
-    names = ['index.html', 'matriz-fiscal-23-atividades.html', PDF, ZIP, *ARTES]
+    names = ['index.html', 'matriz-fiscal-23-atividades.html', PDF, ZIP, *ARTES, *CONTRATOS]
     for name in names:
         expected = (ROOT / name).read_bytes()
         location = BASE + ('' if name == 'index.html' else name) + version(expected)
@@ -94,7 +97,7 @@ args = parser.parse_args()
 with TemporaryDirectory() as tmp:
     build(Path(tmp))
 if args.publicar:
-    paths = ['_kit', PDF, ZIP, *ARTES, 'index.html', 'matriz-fiscal-23-atividades.html']
+    paths = ['_kit', PDF, ZIP, *ARTES, *CONTRATOS, 'index.html', 'matriz-fiscal-23-atividades.html']
     run('git', 'add', '--', *paths)
     if subprocess.run(['git','diff','--cached','--quiet','--',*paths], cwd=ROOT).returncode:
         run('git','commit','-m','Atualizar kit de distribuição do MF Nota Certa','--',*paths)

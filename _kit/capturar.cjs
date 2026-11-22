@@ -14,7 +14,7 @@ async function capture() {
   try {
     const page = await browser.newPage({viewport:{width:1280,height:900},locale:'pt-BR',colorScheme:'light'});
     await page.goto(pathToFileURL(path.join(__dirname,'../index.html')).href);
-    await page.evaluate(() => Promise.all([...document.images].map(img => img.decode())));
+    await page.evaluate(() => Promise.all([...document.images].filter(img => !img.closest('#ajuda')).map(img => img.decode())));
     const el = sel => page.locator(sel);
     async function shot(name, first, last=first) {
       const box = await page.evaluate(([first,last]) => {
@@ -58,6 +58,27 @@ async function capture() {
     await el('#busca-servico').fill('pintura');
     assert.equal(await el('#atividade').inputValue(),'');
     assert.ok(await el('#resultado-simples').isHidden());
+    const contractExamples = [
+      ['instalacao','4329-1/99','Instalação em obra por empreitada sem subposição NBS específica',['1.0106.90.00','1.0106.90.00'],0],
+      ['vidracaria','4330-4/02','Vidraçaria em instalação de portas ou janelas em obra por empreitada',['1.0107.10.00','1.0107.50.00'],1],
+      ['reforma','4330-4/05','Revestimento de pisos ou paredes em reforma de imóvel',['1.0107.40.00','1.0107.30.00','1.0105.40.00'],1],
+    ];
+    await page.setViewportSize({width:600,height:900});
+    for (const [slug,cnae,service,codes,example] of contractExamples) {
+      await el('#atividade').selectOption(cnae);
+      await el('#enquadramento').selectOption({label:service});
+      await el('#consulta-submit').click();
+      assert.equal(await el('#nbs-scope').getAttribute('aria-invalid'),'true');
+      for (const [index,code] of codes.entries()) {
+        await el('#nbs-scope').selectOption(String(index));
+        await el('#consulta-submit').click();
+        assert.ok((await el('#resultado-simples-dados dd').allTextContents()).some(value => value.startsWith(code)));
+        if (index === example) await el('#nbs-scope-box').screenshot({path:path.join(dest,'contrato-'+slug+'.jpg'),quality:96});
+      }
+      await el('#nbs-scope').selectOption('other');
+      await el('#consulta-submit').click();
+      assert.equal(await page.getByRole('button',{name:'Copiar NBS',exact:true}).count(),0);
+    }
     for (const width of [320,390,768,1280]) {
       await page.setViewportSize({width,height:800});
       const help = await page.evaluate(() => {

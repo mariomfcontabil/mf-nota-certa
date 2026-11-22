@@ -59,7 +59,7 @@ def footer(page):
     pdf.setFont('Helvetica-Bold',10);pdf.setFillColor(HexColor('#72500F'))
     pdf.drawString(m,27,'Abrir MF Nota Certa')
     pdf.linkURL(base,(m,23,m+110,39),relative=0,thickness=0)
-    pdf.setFillColor(muted);pdf.setFont('Helvetica',9);pdf.drawRightString(W-m,27,f'{page} / 4')
+    pdf.setFillColor(muted);pdf.setFont('Helvetica',9);pdf.drawRightString(W-m,27,f'{page} / 5')
     pdf.showPage()
 
 y=header('MF Nota Certa','Guia rápido de preenchimento da NFS-e')
@@ -106,9 +106,18 @@ y=picture(images[5],y,345)-10
 y=para('<b>Sem valor fiscal.</b> Use a prévia para conferência. Emita a nota no portal autorizado.',y,10,14,muted)
 assert y>=52,y
 footer(4)
+y=header('Objeto do contrato','Como a resposta define a NBS')
+y=para('Escolha a atividade e o serviço. Se aparecer uma pergunta sobre o contrato, selecione o que foi executado e toque em <b>Consultar serviço</b> para ver a NBS.',y)-15
+for slug,title,description in [('instalacao', 'Outras instalações em obra', 'Cortina, persiana, toldo ou sinalização interna da edificação recebem a mesma NBS, <b>1.0106.90.00</b>.'), ('vidracaria', 'Vidraçaria', 'Vidro, porta de vidro ou parte envidraçada corresponde a <b>1.0107.10.00</b>. Janela pré-fabricada completa com esquadria corresponde a <b>1.0107.50.00</b>.'), ('reforma', 'Acabamento em reforma', 'Peças, madeira, carpete ou papel de parede correspondem a <b>1.0107.40.00</b>. Para pintura ou laqueação, use <b>1.0107.30.00</b>. Para piso de concreto moldado no local, use <b>1.0105.40.00</b>.')]:
+    y=para('<b>'+title+'</b>',y,15,19)-5
+    y=picture(Image.open(ASSETS / ('contrato-'+slug+'.jpg')),y,320)-7
+    y=para(description,y,11,15)-16
+y=para('Se nenhuma opção descrever o contrato, escolha <b>Outro objeto ou ainda preciso conferir</b>. A NBS fica pendente até você identificar o serviço.',y,11,15)
+assert y>=52,y
+footer(5)
 pdf.save()
 verified=PdfReader(str(out))
-assert len(verified.pages)==4
+assert len(verified.pages)==5
 assert "Tela principal" in verified.pages[0].extract_text()
 assert 'limpeza de escritório' in ' '.join(verified.pages[1].extract_text().split())
 assert all(text in ' '.join(verified.pages[2].extract_text().split()) for text in ('Simples Nacional','Altamira/PA','Santarém/PA','Consultar preenchimento'))
