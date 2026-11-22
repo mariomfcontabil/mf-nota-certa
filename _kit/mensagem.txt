@@ -1,11 +1,5 @@
-Olá! 👋 Vai emitir uma NFS-e? No *MF Nota Certa*, você pode buscar pelo nome do serviço na *Consulta simples*.
+Olá! 👋 Na Ajuda do *MF Nota Certa*, toque em *Voltar à consulta* para buscar seu serviço pelo nome. Por lá, você também pode baixar o tutorial em PDF e o kit completo.
 
-Na *Consulta avançada*, *Simples Nacional* e *Altamira/PA* já vêm preenchidos por padrão. Se o serviço foi feito em outra cidade, é só alterar o município e a UF no campo da execução.
-
-🔗 Acesse o MF Nota Certa
-{site}
-
-📄 Baixe o tutorial atualizado
-{tutorial}
+{ajuda}
 
 *MF Contábil e Sistemas*

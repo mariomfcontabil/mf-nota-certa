@@ -36,8 +36,9 @@ def build(stage):
         run(sys.executable, KIT / (layout + '.py'), cwd=stage,
             env=dict(os.environ, MF_TUTORIAL_VERSION=suffix))
     run('node', KIT / 'validar.cjs', BASE, url, cwd=stage)
-    message = (KIT / 'mensagem.txt').read_text().format(site=BASE, tutorial=url)
-    assert BASE in message.splitlines() and url in message.splitlines()
+    help_url = BASE + '#ajuda'
+    message = (KIT / 'mensagem.txt').read_text().format(ajuda=help_url)
+    assert re.findall(r'https?://\S+', message) == [help_url]
     files = {
         'arte-quadrada-whatsapp.png': (stage / 'mf-nota-certa-quadrada-dois-qr.png').read_bytes(),
         'arte-vertical-status.png': (stage / 'mf-nota-certa-status-dois-qr.png').read_bytes(),
