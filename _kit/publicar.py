@@ -24,6 +24,9 @@ def version(data):
     return '?v=' + hashlib.sha256(data).hexdigest()[:12]
 
 
+ARTES = ('arte-quadrada-whatsapp.png', 'arte-vertical-status.png')
+
+
 def build(stage):
     captures = stage / 'imagens'
     run('node', KIT / 'capturar.cjs', captures, cwd=stage)
@@ -50,7 +53,10 @@ def build(stage):
     with ZipFile(stage / ZIP) as archive:
         assert {n: archive.read(n) for n in archive.namelist()} == files
     html = (ROOT / 'index.html').read_text()
-    for name, token in ((PDF, suffix), (ZIP, version((stage / ZIP).read_bytes()))):
+    for name in ARTES:
+        (stage / name).write_bytes(files[name])
+    for name in (PDF, ZIP, *ARTES):
+        token = version((stage / name).read_bytes())
         html, count = re.subn('href="' + re.escape(name) + r'(?:\?[^"]*)?"',
                               'href="' + name + token + '"', html)
         assert count == 1
@@ -58,7 +64,7 @@ def build(stage):
                           lambda m: m[1] + escape(message.rstrip()) + m[2], html, flags=re.S)
     assert count == 1 and 'id="ajuda"' in html
     (stage / 'index.html').write_text(html)
-    for name in (PDF, ZIP, 'index.html'):
+    for name in (PDF, ZIP, *ARTES, 'index.html'):
         shutil.copyfile(stage / name, ROOT / name)
 
 
@@ -68,7 +74,7 @@ args = parser.parse_args()
 with TemporaryDirectory() as tmp:
     build(Path(tmp))
 if args.publicar:
-    paths = ['_kit', PDF, ZIP, 'index.html']
+    paths = ['_kit', PDF, ZIP, *ARTES, 'index.html']
     run('git', 'add', '--', *paths)
     if subprocess.run(['git','diff','--cached','--quiet','--',*paths], cwd=ROOT).returncode:
         run('git','commit','-m','Atualizar kit de distribuição do MF Nota Certa','--',*paths)
