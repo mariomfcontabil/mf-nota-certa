@@ -489,6 +489,8 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <select id="enquadramento" required disabled aria-describedby="enquadramento-ajuda enquadramento-erro"><option value="">Escolha primeiro o CNAE</option></select>
 <small id="enquadramento-ajuda">Escolha a opção que descreve o objeto do contrato.</small><small class="error" id="enquadramento-erro"></small>
 </div>
+<div id="nbs-scope-box" hidden><label for="nbs-scope">Objeto do contrato</label>
+<select id="nbs-scope" required disabled aria-describedby="nbs-scope-erro"></select><small id="nbs-scope-erro" class="error"></small></div>
 <div id="descricao-avancada" hidden>
 <label for="servico">Descrição para a nota</label>
 <textarea id="servico" rows="3" required aria-describedby="servico-ajuda servico-erro" placeholder="Ex.: substituição de mola hidráulica em porta de vidro"></textarea>
@@ -672,8 +674,8 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 
 </section>
 <section class="card" id="matriz-fiscal"><details id="matriz"><summary>Matriz fiscal das 23 atividades</summary>
-<p>Selecione um serviço na matriz para preencher o CNAE e o enquadramento na consulta.</p>
-<p><a href="matriz-fiscal-23-atividades.html">Ver a revisão por atividade e as correlações a confirmar</a></p><div id="tabela"></div></details></section>
+<p>Quando o nome do serviço admitir mais de uma NBS, responda à pergunta sobre o objeto do contrato. Selecione um serviço na matriz para preencher o CNAE e o enquadramento na consulta.</p>
+<p><a href="matriz-fiscal-23-atividades.html">Ver a revisão por atividade e as correlações a confirmar</a></p><p><a href="https://normasinternet2.receita.fazenda.gov.br/api/consulta-externa/ato/97484/anexo/50684">Notas explicativas oficiais da NBS, capítulo 1</a></p><div id="tabela"></div></details></section>
 <section class="card" id="cadastro-iss" aria-labelledby="iss-registry-title">
 <h2 id="iss-registry-title">Cadastro de alíquotas de ISS</h2>
 <p>Salve a alíquota municipal por código nacional do serviço. O cadastro fica neste navegador. As retenções do Simples Nacional continuam seguindo a regra do anexo e do RBT12 quando aplicável.</p>
@@ -709,8 +711,8 @@ button[type=submit] { background:linear-gradient(105deg,#e5a537,#f2c76b); box-sh
 <p>Use o MF Nota Certa para preparar e conferir os dados antes de emitir no portal autorizado.</p>
 <div class="actions ajuda-acoes">
 <a class="button-download" href="#consulta-nfse">Voltar à consulta</a>
-<a class="button-download" href="tutorial-mf-nota-certa.pdf?v=04be868bed58" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
-<a class="button-download" href="mf-nota-certa-kit-whatsapp.zip?v=3f77aece8dea" download>Baixar kit WhatsApp (ZIP)</a>
+<a class="button-download" href="tutorial-mf-nota-certa.pdf?v=ce8e9a700f31" download="tutorial-mf-nota-certa.pdf">Baixar tutorial em PDF</a>
+<a class="button-download" href="mf-nota-certa-kit-whatsapp.zip?v=915fa4ab337b" download>Baixar kit WhatsApp (ZIP)</a>
 <a class="button-download" href="arte-quadrada-whatsapp.png?v=0905ba9efa2b" download>Baixar arte quadrada (conversas)</a>
 <a class="button-download" href="arte-vertical-status.png?v=89543cc4e371" download>Baixar arte vertical (Status)</a>
 <button type="button" class="theme-button" id="copiar-whatsapp">Copiar mensagem do WhatsApp</button>
@@ -880,8 +882,8 @@ const matrix = {
       "nbs": "1.0106.11.00",
       "nbsName": "Serviços de instalação de fiação elétrica e componentes",
       "kind": "obra",
-      "note": "Referência para reparo do edifício que inclui reinstalar fiação e componentes. Restrita à intervenção predial descrita. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "A reinstalação de circuitos e componentes da edificação enquadra-se em 1.0106.11.00. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false
     }
   ],
   "4322-3/01": [
@@ -940,8 +942,8 @@ const matrix = {
       "nbs": "1.0106.12.00",
       "nbsName": "Serviços de instalação de alarmes contra incêndio",
       "kind": "obra",
-      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "A instalação do alarme de incêndio enquadra-se em 1.0106.12.00. Monitoramento e rede de sprinklers têm classificações próprias. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false
     },
     {
       "name": "Instalação de rede hidráulica de abastecimento para combate a incêndio em obra",
@@ -971,8 +973,21 @@ const matrix = {
       "nbs": "1.0106.90.00",
       "nbsName": "Serviços de instalação não classificados em subposições anteriores",
       "kind": "obra",
-      "note": "Use o código residual após excluir as instalações especificamente classificadas. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "O item residual inclui instalação de toldos, persianas, cortinas e sinalização interna. Identifique o objeto antes de aplicar. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false,
+      "scopeQuestion": "O que foi instalado na obra?",
+      "scopeOptions": [
+        [
+          "Cortina, persiana ou toldo",
+          "1.0106.90.00",
+          "Serviços de instalação não classificados em subposições anteriores"
+        ],
+        [
+          "Sinalização interna da edificação",
+          "1.0106.90.00",
+          "Serviços de instalação não classificados em subposições anteriores"
+        ]
+      ]
     }
   ],
   "4330-4/02": [
@@ -982,8 +997,8 @@ const matrix = {
       "nbs": "1.0107.50.00",
       "nbsName": "Serviços de carpintaria e de serralharia",
       "kind": "obra",
-      "note": "Restrito a trabalho de carpintaria ou serralheria. Vidraçaria e outros acabamentos podem ter NBS diferente. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "A montagem de esquadrias, portas ou janelas de madeira ou metal enquadra-se em 1.0107.50.00. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false
     },
     {
       "name": "Vidraçaria em instalação de portas ou janelas em obra por empreitada",
@@ -991,8 +1006,21 @@ const matrix = {
       "nbs": "1.0107.10.00",
       "nbsName": "Serviços de vidraçaria",
       "kind": "obra",
-      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "A instalação de vidro enquadra-se em 1.0107.10.00. A montagem de janela pré-fabricada completa enquadra-se em 1.0107.50.00. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false,
+      "scopeQuestion": "Qual foi o objeto da instalação?",
+      "scopeOptions": [
+        [
+          "Vidro, porta de vidro ou parte envidraçada",
+          "1.0107.10.00",
+          "Serviços de vidraçaria"
+        ],
+        [
+          "Janela pré-fabricada completa, com esquadria",
+          "1.0107.50.00",
+          "Serviços de carpintaria e de serralharia"
+        ]
+      ]
     },
     {
       "name": "Conserto pontual de mola hidráulica de porta, como equipamento isolado",
@@ -1020,8 +1048,8 @@ const matrix = {
       "nbs": "1.0107.20.00",
       "nbsName": "Serviços de gesso e de estuque",
       "kind": "obra",
-      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "Aplicação de gesso, estuque e execução de drywall enquadram-se em 1.0107.20.00. Isolamento acústico, chapisco e reboco têm classificações próprias. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false
     }
   ],
   "4330-4/04": [
@@ -1060,8 +1088,26 @@ const matrix = {
       "nbs": "1.0107.40.00",
       "nbsName": "Serviços de revestimento de pisos e de paredes",
       "kind": "obra",
-      "note": " O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "O acabamento aplicado determina a NBS. Há itens próprios para revestimento, pintura e piso de concreto moldado. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false,
+      "scopeQuestion": "Qual acabamento foi executado na reforma?",
+      "scopeOptions": [
+        [
+          "Piso ou parede com peças, madeira, carpete ou papel de parede",
+          "1.0107.40.00",
+          "Serviços de revestimento de pisos e de paredes"
+        ],
+        [
+          "Pintura ou laqueação",
+          "1.0107.30.00",
+          "Serviços de pintura"
+        ],
+        [
+          "Piso de concreto moldado no local",
+          "1.0105.40.00",
+          "Serviços de concretagem"
+        ]
+      ]
     },
     {
       "name": "Colocação avulsa de revestimento de paredes com material fornecido pelo tomador",
@@ -1174,8 +1220,8 @@ const matrix = {
       "nbs": "1.0105.70.00",
       "nbsName": "Serviços de andaimes",
       "kind": "obra",
-      "note": "Restrito à montagem por empreitada. Se a operação for cessão da estrutura, escolha a opção de cessão. O Anexo VIII não relaciona esta NBS ao subitem. Confirme a classificação pelo contrato antes da emissão.",
-      "review": true
+      "note": "A montagem e desmontagem de andaimes enquadram-se em 1.0105.70.00. Para locação sem montagem, selecione o cenário de locação. Fonte: NEBS 2.0, capítulo 1. O Anexo VIII não registra o par original para este subitem do ISS.",
+      "review": false
     }
   ],
   "4399-1/04": [
@@ -1299,6 +1345,7 @@ const pendingContract = document.querySelector('#contrato-pendente');
 const service = document.querySelector('#enquadramento');
 const fields = [...form.querySelectorAll('[required]')];
 const messages = {
+  'nbs-scope': 'Selecione a opção que descreve o contrato.',
   atividade: 'Selecione a atividade (CNAE).',
   enquadramento: 'Escolha o serviço efetivamente prestado. Se ele não estiver na lista, selecione Outro serviço.',
   servico: 'Descreva o serviço que foi realizado.',
@@ -1336,13 +1383,33 @@ const unclassified = {name:'Outro serviço / preciso confirmar', code:'', nbs:''
 const issAtSite = new Set(['0305','0702','0704','0705','0709','0710','0719','1104','1414']);
 const statutoryWithholding = new Set(['0305','0702','0704','0705','0709','0710','0719']);
 const inssKinds = new Set(['obra','operacao','limpeza','manutencao','conserto','profissional','instalacao']);
-const selected = () => matrix[activity.value]?.[service.value] ?? unclassified;
+const baseService = () => matrix[activity.value]?.[service.value] ?? unclassified;
+const scopeField = $('nbs-scope');
+function updateScope() {
+  const entry = baseService();
+  scopeField.disabled = !entry.scopeQuestion;
+  $('nbs-scope-box').hidden = scopeField.disabled;
+  scopeField.replaceChildren(new Option('Selecione o objeto',''));
+  if (scopeField.disabled) return;
+  scopeField.labels[0].textContent = entry.scopeQuestion;
+  entry.scopeOptions.forEach(([label],index) => scopeField.add(new Option(label,String(index))));
+  scopeField.add(new Option('Outro objeto ou ainda preciso conferir','other'));
+}
+service.addEventListener('change',updateScope);
+function selected() {
+  const entry = baseService();
+  if (!entry.scopeQuestion) return entry;
+  const option = entry.scopeOptions[scopeField.value];
+  if (option) return {...entry,nbs:option[1],nbsName:option[2],note:entry.note + ' Objeto informado: ' + option[0] + '.'};
+  return {...entry,nbs:'',nbsName:'',review:true,note:'Confira no contrato o objeto executado e procure o serviço correspondente antes de preencher a NBS.'};
+}
 const isSimples = () => ['Simples Nacional','MEI'].includes($('regime').value);
 
 function populateServices() {
   const variants = matrix[activity.value];
   service.replaceChildren(new Option(variants ? 'Selecione o serviço' : 'Escolha primeiro o CNAE',''));
   service.disabled = !variants;
+  updateScope();
   if (!variants) {
     service.removeAttribute('aria-invalid');
     $('enquadramento-erro').textContent = '';
@@ -1531,7 +1598,7 @@ function isQuickConsultation() {
   return form.dataset.mode === 'quick';
 }
 function consultationFields() {
-  return isQuickConsultation() ? fields.filter(field => field === activity || field === service) : fields;
+  return isQuickConsultation() ? fields.filter(field => field === activity || field === service || field === scopeField) : fields;
 }
 
 function renderQuickConsultation() {
@@ -1550,7 +1617,7 @@ function renderQuickConsultation() {
   if (classified) {
     addField(list,'Código de tributação nacional',formatCode(entry.code) + ' (' + entry.code + ')');
     addField(list,'NBS',entry.nbs ? entry.nbs + ' · ' + entry.nbsName : 'Confirme a NBS para o serviço.');
-    notice.textContent = entry.review ? 'Confirme a NBS antes de emitir. O par não consta do Anexo VIII.' : 'Códigos de referência para o serviço selecionado. Na consulta avançada, você pode conferir tributos, retenções e condições do contrato.';
+    notice.textContent = entry.review ? 'Confira o objeto no contrato para identificar a NBS antes de emitir.' : 'Códigos de referência para o serviço selecionado. Na consulta avançada, você pode conferir tributos, retenções e condições do contrato.';
   } else if (outside) {
     addField(list,'Código de tributação nacional','Não se aplica à NFS-e neste cenário.');
     if (entry.nbs) addField(list,'NBS de referência',entry.nbs + ' · ' + entry.nbsName);
